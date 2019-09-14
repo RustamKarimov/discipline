@@ -13,7 +13,49 @@
 <body>
 
     {% include 'includes/navigation/top_menu.html' %}
-    {% include 'includes/sidebar_and_content.html' %}
+
+    <div class="ui bottom attached segment pushable">
+        <div class="ui inverted grey vertical sidebar large accordion menu">
+            {% if request.user.is_superuser %}
+                {% include 'includes/navigation/admin_sidebar.html' %}
+    {#        {% elif request.user|has_role:'teacher_role' %}#}
+    {#            {% include 'includes/teacher_navigation.html' %}#}
+    {#        {% elif request.user|has_role:'learner_role' %}#}
+    {#            {% include 'includes/learner_navigation.html' %}#}
+            {% endif %}
+        </div>
+
+        <div class="pusher" style="background-color: whitesmoke">
+            <br>
+            <div class="ui container stackable grid">
+                <div class="row">
+                    <div class="column">
+                        <div class="ui segment">
+                            <div class="ui breadcrumb">
+                                {% block breadcrumb %}
+
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% block content %}
+
+                {% endblock %}
+
+                {% block pagination %}
+                    {% include 'includes/pagination.html' %}
+                {% endblock %}
+
+                <div class="row">
+                    {% block footer %}
+
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
 
     {% include 'includes/scripts.html' %}
 </body>

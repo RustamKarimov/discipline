@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.text import slugify
 
 
@@ -19,7 +19,7 @@ class User(AbstractUser):
     slug = models.SlugField()
     is_teacher = models.BooleanField(default=False)
     is_learner = models.BooleanField(default=False)
-    objects = models.Manager()
+    objects = UserManager()
     teachers = TeacherManager()
     learners = LearnerManager()
 
@@ -33,9 +33,10 @@ class User(AbstractUser):
         slug_str = f"{self.get_full_name()} {self.user_id}"
         self.slug = slugify(slug_str)
 
-        self.last_name = self.last_name.uppercase()
+        self.last_name = self.last_name.upper()
 
-        self.username = self.user_id
+        if self.user_id:
+            self.username = self.user_id
         return super().save(*args, **kwargs)
 
 

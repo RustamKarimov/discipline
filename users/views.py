@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.views import generic
 
-# Create your views here.
+from .models import Teacher
+
+
+class TeacherList(generic.ListView):
+    model = Teacher
+    template_name = 'teachers/list.html'
+    paginate_by = 10
