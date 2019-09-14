@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     #3rd party apps
     'rolepermissions',
-    'crispy_forms'
+    'crispy_forms',
 
     # local apps
     'academic_year',
@@ -111,6 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'users.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
