@@ -1,0 +1,47 @@
+{% if is_paginated %}
+    <div class="ui center aligned container">
+        <br>
+        <div class="ui  basic buttons">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="ui button">
+            {% else %}
+                <a href="" class="ui disabled button">
+            {% endif %}
+
+                <i class="angle double left icon"></i>
+            </a>
+
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="ui button">
+            {% else %}
+                <a href="" class="ui disabled button">
+            {% endif %}
+                <i class="angle left icon"></i>
+            </a>
+
+            <button class="ui disabled button">
+                Page {{ page_obj.number }} of {{ paginator.num_pages }}
+            </button>
+
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="ui button">
+            {% else %}
+                <a href="" class="ui disabled button">
+            {% endif %}
+                <i class="angle right icon"></i>
+            </a>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ paginator.num_pages }}" class="ui button">
+            {% else %}
+                <a href="" class="ui disabled button">
+            {% endif %}
+                <i class="angle double right icon"></i>
+            </a>
+        </div>
+    </div>
+
+
+{% endif %}
+

@@ -1,0 +1,16 @@
+<div class="ui container">
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'info' %}
+                {% include 'includes/messages/info.html' with message=message %}
+            {% elif message.tags == 'error' %}
+                {% include 'includes/messages/error.html' with message=message %}
+            {% elif message.tags == 'success' %}
+                {% include 'includes/messages/success.html' with message=message %}
+            {% elif message.tags == 'warning' %}
+                {% include 'includes/messages/warning.html' with message=message %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+
