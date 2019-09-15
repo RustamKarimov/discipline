@@ -66,6 +66,7 @@ class Teacher(models.Model):
 class Learner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='learner')
     # grades = models.ManyToManyField(Grade, related_name='learners', blank=True)
+    slug = models.SlugField()
     is_alumni = models.BooleanField(default=False)
     is_transferred = models.BooleanField(default=False)
     is_expelled = models.BooleanField(default=False)
@@ -76,3 +77,17 @@ class Learner(models.Model):
 
     def __str__(self):
         return self.user.get_full_name()
+
+    def save(self, *args, **kwargs):
+        slug_str = f"{self.user.get_full_name()} {self.user.user_id}"
+        self.slug = slugify(slug_str)
+        return super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('learners:details', args=[self.slug])
+
+    def get_update_url(self):
+        return reverse('learners:edit', args=[self.slug])
+
+    def get_delete_url(self):
+        return reverse('learners:delete', args=[self.slug])

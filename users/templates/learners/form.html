@@ -1,0 +1,23 @@
+{% extends 'teachers/base_teachers.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ action }}</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <div class="ui segment">
+                <h3 class="ui dividing header">{{ action }}</h3>
+                <form method="post" class="ui form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'learners/base_learners.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">Delete {{ learner }}</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+    <div class="ui fluid segment">
+        <h2 class="ui header">Delete "{{ learner }}"?</h2>
+
+        <form method="post" class="ui form">
+            {% csrf_token %}
+            <p>Are you sure you want to delete learner "{{ learner }}"?</p>
+            <p>
+                Please be informed that all merits and demerits received by <strong>{{ learner }}</strong>
+                 will be deleted as well.
+            </p>
+
+            <a href="{{ learner.get_absolute_url }}" class="ui grey basic button">Cancel</a>
+            <input type="submit" class="ui red basic button" value="Delete">
+        </form>
+    </div>
+    </div>
+{% endblock %}
