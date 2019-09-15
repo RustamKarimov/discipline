@@ -1,0 +1,22 @@
+<a class="active item" href="{{ request.user.learner.get_absolute_url }}">
+    <div class="ui card">
+        <div class="image">
+            <img src="{{ request.user.learner.image.url }}">
+        </div>
+        <div class="content">
+            {{ request.user.get_full_name }}
+        </div>
+    </div>
+
+</a>
+
+<a class="ui item" href="{% url 'password_change' %}">
+    <i class="lock icon"></i>
+    Change Password
+</a>
+
+<a class="ui item" href="{% url 'logout' %}">
+    <i class="sign out icon"></i>
+    Logout
+</a>
+

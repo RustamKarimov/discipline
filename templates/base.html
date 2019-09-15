@@ -1,3 +1,4 @@
+{% load permission_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,23 +12,27 @@
     {% include 'includes/links.html' %}
 </head>
 <body>
+    {% block top_menu %}
+        {% include 'includes/navigation/top_menu.html' %}
+    {% endblock %}
 
-    {% include 'includes/navigation/top_menu.html' %}
 
     <div class="ui bottom attached segment pushable">
-        <div class="ui inverted grey vertical sidebar large accordion menu">
-            {% if request.user.is_superuser %}
-                {% include 'includes/navigation/admin_sidebar.html' %}
-    {#        {% elif request.user|has_role:'teacher_role' %}#}
-    {#            {% include 'includes/teacher_navigation.html' %}#}
-    {#        {% elif request.user|has_role:'learner_role' %}#}
-    {#            {% include 'includes/learner_navigation.html' %}#}
-            {% endif %}
-        </div>
-
+        {% block navigation %}
+            <div class="ui inverted grey vertical sidebar large accordion menu">
+                {% if request.user.is_superuser %}
+                    {% include 'includes/navigation/admin_sidebar.html' %}
+                {% elif request.user|has_role:'teacher_role' %}
+                    {% include 'includes/navigation/teacher_navigation.html' %}
+                {% elif request.user|has_role:'learner_role' %}
+                    {% include 'includes/navigation/learner_navigation.html' %}
+                {% endif %}
+            </div>
+        {% endblock %}
         <div class="pusher" style="background-color: whitesmoke">
             <br>
             <div class="ui container stackable grid">
+                {% include 'includes/messages.html' %}
                 <div class="row">
                     <div class="column">
                         <div class="ui segment">

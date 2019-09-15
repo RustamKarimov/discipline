@@ -1,5 +1,5 @@
-<div class="item">
-    <a class="title">
+<div class="item {% if active == 'dashboard' %}active{% endif %}">
+    <a href="{% url 'dashboard' %}" class="title">
         <span><i class="th icon"></i></span> Dashboard
     </a>
 </div>
@@ -123,12 +123,12 @@
     </a>
 </div>
 <div class="item">
-    <a class="title">
+    <a href="{% url 'password_change' %}" class="title">
         <span><i class="lock open icon"></i></span> Change Password
     </a>
 </div>
 <div class="item">
-    <a class="title">
+    <a href="{% url 'logout' %}" class="title">
         <span><i class="door open icon"></i></span> Logout
     </a>
 </div>

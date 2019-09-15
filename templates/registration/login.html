@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+    Accounts
+    <i class="right angle icon divider"></i>
+    <a class="section">Log-in</a>
+{% endblock %}
+
+{% block top_menu %}{% endblock %}
+
+{% block navigation %}{% endblock %}
+
+{% block content %}
+    <div class="ui two column centered row">
+        <div class="column" style="max-width: 450px">
+            <h2 class="ui center aligned header">Log-in to your account</h2>
+            <form method="post" class="ui large form">
+                {% csrf_token %}
+                <div class="ui stacked segment">
+                    {{ form.non_field_errors }}
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="user icon">
+                            </i>
+                            {{ form.username }}
+                        </div>
+                        {{ form.username.errors }}
+                    </div>
+
+                    <div class="field">
+                        <div class="ui left icon input">
+                            <i class="lock icon"></i>
+                            {{ form.password }}
+                        </div>
+                        {{ form.password.errors }}
+                    </div>
+
+                    <button class="ui fluid large teal submit button" type="submit">
+                        Login
+                    </button>
+                </div>
+            </form>
+
+            <div class="ui message">
+                Forgot password?
+                <a href="#">Reset</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

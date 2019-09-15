@@ -1,9 +1,10 @@
 from django.views import generic
 from django.db import transaction
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.contrib import messages
 
 from rolepermissions.roles import assign_role
+from rolepermissions.checkers import has_object_permission
 
 from . import utils
 
@@ -72,6 +73,16 @@ class UserDetails(generic.DetailView):
         context = super().get_context_data(object_list=None, **kwargs)
         context['active'] = utils.get_model_name_as_plural_string(self.model)
         return context
+
+    def get(self, request, *args, **kwargs):
+        user_object = self.get_object()
+        permission = f'view_{self.model.__name__.lower()}'
+        if has_object_permission(permission, request.user, user_object):
+            return super().get(request, *args, **kwargs)
+        else:
+            messages.warning(request, "You don't have permission to perform this action. "
+                             "Please login as another user.")
+            return redirect('login')
 
 
 class UserEdit(generic.UpdateView):

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+    <a href="{% url 'dashboard' %}" class="section">Dashboard</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui stackable grid container">
+        <div class="doubling six column row">
+
+            {% include 'includes/statistics.html' with number=year_count object='Year' %}
+            {% include 'includes/statistics.html' with number=grade_count object='Grade' %}
+            {% include 'includes/statistics.html' with number=teacher_count object='Teacher' %}
+            {% include 'includes/statistics.html' with number=learner_count object='Learner' %}
+            {% include 'includes/statistics.html' with number=merit_count object='Merit' %}
+            {% include 'includes/statistics.html' with number=demerit_count object='Demerit' %}
+        </div>
+
+        <div class="three column stackable center aligned row">
+                <div class="column">
+                    <div class="ui segment">
+                        <h3>Graphs</h3>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui segment">
+                        <h3>Merits</h3>
+                        <h4>Top 5 Grades</h4>
+                        <table class="ui very basic celled small compact table">
+                            <thead>
+                                <tr>
+                                    <th>Grade</th>
+                                    <th>Merits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+
+                        <h4>Top 5 Teachers</h4>
+                        <table class="ui very basic celled small compact table">
+                            <thead>
+                                <tr>
+                                    <th>Teacher</th>
+                                    <th>Merits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+
+                        <h4>Top 5 Learners</h4>
+                        <table class="ui very basic celled small compact table">
+                            <thead>
+                                <tr>
+                                    <th>Learner</th>
+                                    <th>Merits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="ui segment">
+                        <h3>Demerits</h3>
+                        <h4>Top 5 Grades</h4>
+                        <table class="ui very basic celled small compact table">
+                            <thead>
+                                <tr>
+                                    <th>Grade</th>
+                                    <th>Merits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+
+                        <h4>Top 5 Teachers</h4>
+                        <table class="ui very basic celled small compact table">
+                            <thead>
+                                <tr>
+                                    <th>Teacher</th>
+                                    <th>Merits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+
+                        <h4>Top 5 Learners</h4>
+                        <table class="ui very basic celled small compact table">
+                            <thead>
+                                <tr>
+                                    <th>Learner</th>
+                                    <th>Merits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        </div>
+    </div>
+{% endblock %}
