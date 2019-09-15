@@ -18,15 +18,7 @@
                 <i class="plus icon"></i>
                 Add
             </a>
-            <a class="item">
-                <i class="edit icon"></i>
-                Edit
-            </a>
-             <a class="item">
-                <i class="trash icon"></i>
-                Delete
-            </a>
-       </div>
+        </div>
     </div>
 
 </div>
@@ -44,14 +36,6 @@
             <a class="item">
                 <i class="plus icon"></i>
                 Add
-            </a>
-            <a class="item">
-                <i class="edit icon"></i>
-                Edit
-            </a>
-             <a class="item">
-                <i class="trash icon"></i>
-                Delete
             </a>
        </div>
     </div>
@@ -72,40 +56,24 @@
                 <i class="plus icon"></i>
                 Add
             </a>
-            <a class="item">
-                <i class="edit icon"></i>
-                Edit
-            </a>
-             <a class="item">
-                <i class="trash icon"></i>
-                Delete
-            </a>
        </div>
     </div>
 
 </div>
-<div class="item">
+<div class="item {% if active == 'learners' %}active{% endif %}">
     <a class="title">
         <i class="dropdown icon"></i>
         <span><i class="user icon"></i></span> Learners
     </a>
     <div class="content">
         <div class="ui inverted grey vertical menu">
-            <a class="item">
+            <a href="{% url 'learners:list' %}" class="item">
                 <i class="list icon"></i>
                 List
             </a>
             <a class="item">
                 <i class="plus icon"></i>
                 Add
-            </a>
-            <a class="item">
-                <i class="edit icon"></i>
-                Edit
-            </a>
-             <a class="item">
-                <i class="trash icon"></i>
-                Delete
             </a>
        </div>
     </div>
@@ -126,14 +94,6 @@
                 <i class="plus icon"></i>
                 Add
             </a>
-            <a class="item">
-                <i class="edit icon"></i>
-                Edit
-            </a>
-             <a class="item">
-                <i class="trash icon"></i>
-                Delete
-            </a>
        </div>
     </div>
 
@@ -152,14 +112,6 @@
             <a class="item">
                 <i class="plus icon"></i>
                 Add
-            </a>
-            <a class="item">
-                <i class="edit icon"></i>
-                Edit
-            </a>
-             <a class="item">
-                <i class="trash icon"></i>
-                Delete
             </a>
        </div>
     </div>

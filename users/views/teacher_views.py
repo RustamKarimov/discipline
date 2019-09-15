@@ -8,11 +8,12 @@ from rolepermissions.mixins import HasPermissionsMixin
 
 from school_discipline.roles import TeacherRole
 
-from .models import Teacher
-from .forms import UserForm
+from ..models import Teacher
+from ..forms import UserForm
 
 
-class TeacherList(generic.ListView):
+class TeacherList(HasPermissionsMixin, generic.ListView):
+    required_permission = 'admin'
     model = Teacher
     template_name = 'teachers/list.html'
     paginate_by = 10

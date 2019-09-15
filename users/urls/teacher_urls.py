@@ -2,7 +2,7 @@ from django.urls import path
 
 from users import views
 
-from .. import views
+from users.views import teacher_views as views
 
 
 urlpatterns = [
