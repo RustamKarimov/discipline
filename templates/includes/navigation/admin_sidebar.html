@@ -57,7 +57,7 @@
     </div>
 
 </div>
-<div class="item">
+<div class="item {% if active == 'teachers' %}active{% endif %}">
     <a class="title">
         <i class="dropdown icon"></i>
         <span><i class="user tie icon"></i></span> Teachers
@@ -68,7 +68,7 @@
                 <i class="list icon"></i>
                 List
             </a>
-            <a class="item">
+            <a href="{% url 'teachers:add' %}" class="item">
                 <i class="plus icon"></i>
                 Add
             </a>

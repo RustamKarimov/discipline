@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.text import slugify
+from django.shortcuts import reverse
 
 
 class TeacherManager(models.Manager):
@@ -16,7 +17,6 @@ class LearnerManager(models.Manager):
 class User(AbstractUser):
     image = models.ImageField(upload_to='users', default='users/no_image.png')
     user_id = models.CharField(max_length=10, unique=True)
-    slug = models.SlugField()
     is_teacher = models.BooleanField(default=False)
     is_learner = models.BooleanField(default=False)
     objects = UserManager()
@@ -30,9 +30,6 @@ class User(AbstractUser):
         return self.get_full_name()
 
     def save(self, *args, **kwargs):
-        slug_str = f"{self.get_full_name()} {self.user_id}"
-        self.slug = slugify(slug_str)
-
         self.last_name = self.last_name.upper()
 
         if self.user_id:
@@ -42,6 +39,7 @@ class User(AbstractUser):
 
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='teacher')
+    slug = models.SlugField()
     # form_class = models.ManyToManyField(Grade, related_name='teachers', blank=True)
 
     class Meta:
@@ -49,6 +47,20 @@ class Teacher(models.Model):
 
     def __str__(self):
         return self.user.get_full_name()
+
+    def save(self, *args, **kwargs):
+        slug_str = f"{self.user.get_full_name()} {self.user.user_id}"
+        self.slug = slugify(slug_str)
+        return super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('teachers:details', args=[self.slug])
+
+    def get_update_url(self):
+        return reverse('teachers:edit', args=[self.slug])
+
+    def get_delete_url(self):
+        return reverse('teachers:delete', args=[self.slug])
 
 
 class Learner(models.Model):

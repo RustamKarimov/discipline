@@ -1,0 +1,83 @@
+{% extends 'teachers/base_teachers.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ teacher }}</a>
+{% endblock %}
+
+{% block content %}
+        <div class="seven wide column">
+            <div class="ui padded segment">
+                <div class="ui two column grid">
+                    <div class="six wide column">
+                        <div class="row">
+                            <div class="ui rounded fluid image">
+                                <img src="{{ teacher.user.image.url }}">
+                            </div>
+                        </div>
+                        {% if request.user.is_superuser %}
+                            <br>
+                            <div class="row">
+                                <div class="ui mini basic three icon compact buttons">
+                                    <a href="{{ teacher.get_update_url }}" class="ui button" title="Edit {{ teacher }}">
+                                        <i class="edit icon"></i>
+                                    </a>
+                                    <a href="{{ teacher.get_delete_url }}" class="ui button" title="Delete {{ teacher }}">
+                                        <i class="trash icon"></i>
+                                    </a>
+                                    <a class="ui button" title="Print Report">
+                                        <i class="file pdf icon"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="ten wide column">
+                        <div class="ui list">
+                            <div class="item">
+                                <div class="header">User ID</div>
+                                {{ teacher.user.user_id }}
+                            </div>
+                            <div class="item">
+                                <div class="header">Name</div>
+                                {{teacher}}
+                            </div>
+                            <div class="item">
+                                <div class="header">Email</div>
+                                {{ teacher.user.email|wordwrap:21 }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ui segment">
+                {% if teacher.form_classes.count %}
+                {% else %}
+                    <p>No form classes assigned to {{ teacher }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="nine wide column">
+            <div class="ui two column grid">
+                {% include 'includes/statistics.html' with number=123 object='Merit' %}
+                {% include 'includes/statistics.html' with number=123 object='Demerit' %}
+            </div>
+            <div class="ui segment">
+                <div class="ui top attached tabular centered pointing secondary menu">
+                    <div class="center item active" data-tab="one">Merits</div>
+                    <div class="center item" data-tab="two">Demerits</div>
+                </div>
+                <div class="ui bottom attached tab segment active" data-tab="one">
+                    <p>First</p>
+                    <p>Tab</p>
+                </div>
+                <div class="ui bottom attached tab segment" data-tab="two">
+                    <p>Second</p>
+                    <p>Tab</p>
+                </div>
+            </div>
+        </div>
+{% endblock %}

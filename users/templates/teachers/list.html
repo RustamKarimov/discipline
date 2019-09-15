@@ -8,39 +8,49 @@
 
 {% block content %}
     <div class="row">
-    <div class="column">
-        <table class="ui striped grey table">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Teacher ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th># of Form Classes</th>
-                </tr>
-            </thead>
+        <div class="column">
+            <table class="ui striped grey table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Teacher ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th># of Form Classes</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                {% for teacher in teacher_list %}
+                <tbody>
+                    {% for teacher in teacher_list %}
+                        <tr>
+                            <td><img class="ui mini circular image" src="{{ teacher.user.image.url }}"></td>
+                            <td>
+                                <a href="{{ teacher.get_absolute_url }}">{{ teacher.user.user_id }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ teacher.get_absolute_url }}">{{ teacher.user.get_full_name }}</a>
+                            </td>
+                            <td>{{ teacher.user.email }}</td>
+                            <td>{{ teacher.get_number_of_form_classes}}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">No teacher registered yet..</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+                <tfoot class="full-width">
                     <tr>
-                        <td><img class="ui mini circular image" src="{{ teacher.image.url }}"></td>
-                        <td>
-                            <a href="{{ teacher.get_absolute_url }}">{{ teacher.teacher_id }}</a>
-                        </td>
-                        <td>
-                            <a href="{{ teacher.get_absolute_url }}">{{ teacher.user.get_full_name }}</a>
-                        </td>
-                        <td>{{ teacher.user.email }}</td>
-                        <td>{{ teacher.get_number_of_form_classes}}</td>
+                        <th colspan="5">
+                            <a href="{% url 'teachers:add' %}" class="ui right floated small grey labeled icon button">
+                                <i class="user plus icon"></i> Add User
+                            </a>
+                        </th>
                     </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="5">No teacher registered yet..</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </tfoot>
+            </table>
+        </div>
     </div>
 {% endblock %}
 

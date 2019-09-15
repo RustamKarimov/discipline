@@ -3,5 +3,5 @@
 {% block breadcrumb %}
     {{ block.super }}
     <i class="right angle icon divider"></i>
-    <a class="section">Teachers</a>
+    <a href="{% url 'teachers:list' %}" class="section">Teachers</a>
 {% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'teachers/base_teachers.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">Delete {{ teacher }}</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+    <div class="ui fluid segment">
+        <h2 class="ui header">Delete "{{ teacher }}"?</h2>
+
+        <form method="post" class="ui form">
+            {% csrf_token %}
+            <p>Are you sure you want to delete teacher "{{ teacher }}"?</p>
+            <p>
+                Please be informed that all merits and demerits given by <strong>{{ teacher }}</strong>
+                 will be deleted as well.
+            </p>
+
+            <a href="{{ teacher.get_absolute_url }}" class="ui grey basic button">Cancel</a>
+            <input type="submit" class="ui red basic button" value="Delete">
+        </form>
+    </div>
+    </div>
+{% endblock %}
