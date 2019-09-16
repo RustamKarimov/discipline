@@ -22,18 +22,18 @@
     </div>
 
 </div>
-<div class="item">
+<div class="item {% if active == 'grades' %}active{% endif %}">
     <a class="title">
         <i class="dropdown icon"></i>
         <span><i class="sitemap icon"></i></span> Grades
     </a>
     <div class="content">
         <div class="ui inverted grey vertical menu">
-            <a class="item">
+            <a href="{% url 'grades:list' %}" class="item">
                 <i class="list icon"></i>
                 List
             </a>
-            <a class="item">
+            <a href="{% url 'grades:add' %}" class="item">
                 <i class="plus icon"></i>
                 Add
             </a>

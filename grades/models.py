@@ -35,9 +35,9 @@ class Grade(models.Model):
         division = Settings.objects.first().division
         return f"{division} {self.section} {self.branch}"
 
-    # def get_absolute_url(self):
-    #     return reverse('grades:details', args=[self.slug])
-    #
+    def get_absolute_url(self):
+        return reverse('grades:details', args=[self.slug])
+
     # def get_update_url(self):
     #     return reverse('grades:update', args=[self.slug])
     #

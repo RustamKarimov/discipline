@@ -12,23 +12,27 @@
     {% include 'includes/links.html' %}
 </head>
 <body>
-    {% block top_menu %}
-        {% include 'includes/navigation/top_menu.html' %}
-    {% endblock %}
+    {% if user.is_authenticated %}
+        {% block top_menu %}
+            {% include 'includes/navigation/top_menu.html' %}
+        {% endblock %}
+    {% endif %}
 
 
     <div class="ui bottom attached segment pushable">
-        {% block navigation %}
-            <div class="ui inverted grey vertical sidebar large accordion menu">
-                {% if request.user.is_superuser %}
-                    {% include 'includes/navigation/admin_sidebar.html' %}
-                {% elif request.user|has_role:'teacher_role' %}
-                    {% include 'includes/navigation/teacher_navigation.html' %}
-                {% elif request.user|has_role:'learner_role' %}
-                    {% include 'includes/navigation/learner_navigation.html' %}
-                {% endif %}
-            </div>
-        {% endblock %}
+        {% if user.is_authenticated %}
+            {% block navigation %}
+                <div class="ui inverted grey vertical sidebar large accordion menu">
+                    {% if request.user.is_superuser %}
+                        {% include 'includes/navigation/admin_sidebar.html' %}
+                    {% elif request.user|has_role:'teacher_role' %}
+                        {% include 'includes/navigation/teacher_navigation.html' %}
+                    {% elif request.user|has_role:'learner_role' %}
+                        {% include 'includes/navigation/learner_navigation.html' %}
+                    {% endif %}
+                </div>
+            {% endblock %}
+        {% endif %}
         <div class="pusher" style="background-color: whitesmoke">
             <br>
             <div class="ui container stackable grid">
@@ -63,5 +67,9 @@
     </div>
 
     {% include 'includes/scripts.html' %}
+
+    {% block scripts %}
+    
+    {% endblock %}
 </body>
 </html>

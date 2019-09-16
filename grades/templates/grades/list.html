@@ -1,0 +1,60 @@
+{% extends 'grades/base_grades.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">List</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <table class="ui striped grey table">
+                <thead>
+                    <tr>
+                        <th>Grade</th>
+                        <th>Form Teacher(s)</th>
+                        <th># of learners</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for grade in grade_list %}
+                        <tr>
+                            <td>
+                                <a href="{{ grade.get_absolute_url }}">{{ grade }}</a>
+                            </td>
+                            <td>
+                                {% for form_teacher in grade.form_teachers %}
+                                    {% if not forloop.last %}
+                                        {{ form_teacher }},
+                                    {% else %}
+                                        {{ form_teacher }}
+                                    {% endif %}
+                                {% endfor %}
+
+                            </td>
+                            <td>{{ grade.learners.count }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">No grade registered yet..</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+                <tfoot class="full-width">
+                    <tr>
+                        <th colspan="5">
+                            <a href="{% url 'grades:add' %}" class="ui right floated small grey labeled icon button">
+                                <i class="chalkboard teacher icon"></i> Add Grade
+                            </a>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+test

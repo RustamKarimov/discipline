@@ -1,0 +1,59 @@
+{% extends 'grades/base_grades.html' %}
+{% load permission_tags %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ grade }} Details</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+        <h1 class="header">{{ grade }}</h1>
+        {% if request.user|can:"admin" %}
+            <div class="row">
+                <a href="{{ grade.get_update_url }}" class="ui primary basic button">
+                    Update
+                </a>
+
+                <a href="{{ grade.get_delete_url }}" class="ui red basic button">
+                    Delete
+                </a>
+
+                <a href="" class="ui primary basic button">
+                    Assign Form Teachers
+                </a>
+
+                <a href="" class="ui primary basic button">
+                    Assign Learners
+                </a>
+            </div>
+        {% endif %}
+
+        <table class="ui table">
+            <thead>
+                <tr>
+                    <th>School ID</th>
+                    <th>Name</th>
+                    <th>Merits</th>
+                    <th>Demerits</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for learner in grade.learners.all %}
+                    <tr>
+                        <td>{{ learner.learner_id }}</td>
+                        <td>{{ learner }}</td>
+                        <td>{{ learner.discipline_action.count }}</td>
+                        <td>{{ learner.discipline_action.count }}</td>
+                        <td>{{ learner.discipline_action.count }}</td>
+                        {#  todo: list merits demerits total points #}
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

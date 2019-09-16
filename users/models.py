@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.text import slugify
 from django.shortcuts import reverse
 
+from grades.models import Grade
+
 
 class TeacherManager(models.Manager):
     def get_queryset(self):
@@ -40,7 +42,7 @@ class User(AbstractUser):
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='teacher')
     slug = models.SlugField()
-    # form_class = models.ManyToManyField(Grade, related_name='teachers', blank=True)
+    form_class = models.ManyToManyField(Grade, related_name='teachers', blank=True)
 
     class Meta:
         ordering = ('user__last_name', 'user__first_name')
@@ -65,7 +67,7 @@ class Teacher(models.Model):
 
 class Learner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='learner')
-    # grades = models.ManyToManyField(Grade, related_name='learners', blank=True)
+    grades = models.ManyToManyField(Grade, related_name='learners', blank=True)
     slug = models.SlugField()
     is_alumni = models.BooleanField(default=False)
     is_transferred = models.BooleanField(default=False)
