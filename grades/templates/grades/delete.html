@@ -1,0 +1,22 @@
+{% extends 'grades/base_grades.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">Delete {{ grade }}</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+
+        <div class="ui segment">
+            <h2>Delete "{{ grade }}"?</h2>
+            <form method="post">
+                {% csrf_token %}
+                <p>Are you sure you want to delete "{{ grade }}"?</p>
+                <a href="{{ grade.get_absolute_url }}" class="ui primary basic button">Cancel</a>
+                <input type="submit" class="ui red basic button" value="Delete">
+            </form>
+        </div>
+    </div>
+{% endblock %}

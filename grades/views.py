@@ -122,3 +122,15 @@ class GradeEdit(HasPermissionsMixin, generic.UpdateView):
         context = super().get_context_data(**kwargs)
         context['active'] = 'grades'
         return context
+
+
+class GradeDelete(HasPermissionsMixin, generic.DeleteView):
+    required_permission = 'admin'
+    model = Grade
+    template_name = 'grades/delete.html'
+    success_url = reverse_lazy('grades:list')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['active'] = 'grades'
+        return context

@@ -8,4 +8,5 @@ urlpatterns = [
     path('add/', views.GradeAdd.as_view(), name='add'),
     path('<slug:slug>/', views.GradeDetails.as_view(), name='details'),
     path('edit/<slug:slug>/', views.GradeEdit.as_view(), name='edit'),
+    path('delete/<slug:slug>/', views.GradeDelete.as_view(), name='delete'),
 ]
