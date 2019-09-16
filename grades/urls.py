@@ -9,4 +9,7 @@ urlpatterns = [
     path('<slug:slug>/', views.GradeDetails.as_view(), name='details'),
     path('edit/<slug:slug>/', views.GradeEdit.as_view(), name='edit'),
     path('delete/<slug:slug>/', views.GradeDelete.as_view(), name='delete'),
+
+    path('<slug:slug>/assign_teachers/', views.AssignTeachersToGrade.as_view(), name='assign_teachers'),
+
 ]

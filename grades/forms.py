@@ -5,6 +5,7 @@ from crispy_forms.layout import Layout, Div, Submit, HTML
 
 from academic_year.models import AcademicYear
 from settings.models import Settings
+from users.models import Teacher
 
 from .models import Grade
 
@@ -56,3 +57,19 @@ class GradeUpdateForm(forms.ModelForm):
         grade = Grade.objects.filter(year=year, section=section, branch=branch).first()
         if grade:
             raise forms.ValidationError(f'{grade} is already in database.')
+
+
+class TeacherToGradeForm(forms.ModelForm):
+    teachers = forms.ModelMultipleChoiceField(Teacher.objects.all(),
+                                              widget=forms.CheckboxSelectMultiple(),
+                                              required=False)
+
+    class Meta:
+        model = Grade
+        fields = ('teachers', )
+
+    def __init__(self, **kwargs):
+        grade = kwargs.pop('instance')
+        super().__init__(**kwargs)
+        form_teachers = grade.teachers.all()
+        self.fields['teachers'].initial = form_teachers

@@ -1,0 +1,50 @@
+{% extends 'grades/base_grades.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ grade }} Details</a>
+    <i class="right angle icon divider"></i>
+    <a class="section">Assign Form Teachers</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+        <h1 class="ui header">Assign form teachers to {{ grade }}</h1>
+
+        <form method="post" class="ui form">
+            {% csrf_token %}
+
+            <div class="ui card">
+                <div class="content">
+                    <div class="header">{{ Grade }}</div>
+                    <div class="meta">Form teachers</div>
+                </div>
+                <div class="content">
+                    <div class="description">
+                        <div class="ui list">
+                            {% for teacher in form.teachers %}
+                                <div class="item">
+                                    {{ teacher }}
+                                </div>
+                            {% endfor %}
+                            {{ form.errors }}
+                        </div>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <input type="submit" class="ui positive button" value="Submit">
+                        <a href="{{ grade.get_absolute_url }}" class="ui button">Cancel</a>
+                    </div>
+                </div>
+            </div>
+                </div>
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

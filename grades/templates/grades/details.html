@@ -29,15 +29,26 @@
             {% if request.user.is_superuser %}
                 <br>
                 <div class="row">
-                    <div class="ui mini basic three icon compact buttons">
+                    <div class="ui mini basic five icon compact buttons">
                         <a href="{{ grade.get_update_url }}"
                            class="ui button" title="Edit {{ grade }}">
                             <i class="edit icon"></i>
                         </a>
+
                         <a href="{{ grade.get_delete_url }}"
                            class="ui button" title="Delete {{ grade }}">
                             <i class="trash icon"></i>
                         </a>
+
+                        <a href="{% url 'grades:assign_teachers' grade.slug %}"
+                           class="ui button" title="Assign Form Teachers to {{ grade }}">
+                            <i class="user plus icon"></i>
+                        </a>
+
+                        <a class="ui button" title="Assign Learners to {{ grade }}">
+                            <i class="users icon"></i>
+                        </a>
+
                         <a class="ui button" title="Print Report">
                             <i class="file pdf icon"></i>
                         </a>

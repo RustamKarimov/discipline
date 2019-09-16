@@ -4,6 +4,7 @@ from django.forms import modelformset_factory, BaseModelFormSet
 from django.shortcuts import redirect
 from django.utils.text import slugify
 from django.urls import reverse_lazy
+from django.db import transaction
 
 from rolepermissions.mixins import HasPermissionsMixin
 from rolepermissions.checkers import has_object_permission
@@ -12,7 +13,7 @@ from academic_year.models import AcademicYear
 from settings.models import Settings
 
 from .models import Grade
-from .forms import GradeForm, GradeUpdateForm
+from .forms import GradeForm, GradeUpdateForm, TeacherToGradeForm
 
 
 class GradeList(generic.ListView):
@@ -129,6 +130,32 @@ class GradeDelete(HasPermissionsMixin, generic.DeleteView):
     model = Grade
     template_name = 'grades/delete.html'
     success_url = reverse_lazy('grades:list')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['active'] = 'grades'
+        return context
+
+
+class AssignTeachersToGrade(HasPermissionsMixin, generic.UpdateView):
+    required_permission = 'admin'
+    model = Grade
+    form_class = TeacherToGradeForm
+    template_name = 'grades/teachers_to_grade.html'
+
+    def form_valid(self, form):
+        grade = self.get_object()
+        existing_teachers = grade.teachers.all()
+        with transaction.atomic():
+            new_teachers = form.cleaned_data['teachers']
+
+            for teacher in existing_teachers:
+                grade.teachers.remove(teacher)
+
+            for teacher in new_teachers:
+                grade.teachers.add(teacher)
+
+            return redirect('grades:details', grade.slug)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)

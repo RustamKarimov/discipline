@@ -4,7 +4,7 @@ from school_discipline.roles import TeacherRole, LearnerRole
 
 @register_object_checker()
 def view_grade(role, user, grade):
-    if user in grade.teachers.all():
+    if user.teacher in grade.teachers.all():
         return True
 
     return False
