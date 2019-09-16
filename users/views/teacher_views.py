@@ -30,3 +30,9 @@ class TeacherEdit(HasPermissionsMixin, mixins.UserEdit):
 class TeacherDelete(HasPermissionsMixin, mixins.UserDelete):
     required_permission = 'admin'
     model = Teacher
+
+
+# todo: Assign form classes to teacher
+# todo: Change form_class of a learner
+# todo: Display information on learner detail page
+# todo: Read teachers from file

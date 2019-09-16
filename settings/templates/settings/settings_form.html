@@ -1,0 +1,26 @@
+{% extends 'settings/base_settings.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">Update Settings</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+
+        <form method="post" class="ui form">
+            {% csrf_token %}
+
+            {% crispy form %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('.ui.checkbox').checkbox();
+    </script>
+{% endblock %}

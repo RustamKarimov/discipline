@@ -3,7 +3,7 @@
         <div class="image">
             <img src="{{ request.user.image.url }}">
         </div>
-        <div class="content">
+        <div class="content" style="word-wrap: break-word">
             {{ request.user.get_full_name }}
         </div>
     </div>

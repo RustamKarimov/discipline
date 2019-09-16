@@ -117,8 +117,8 @@
     </div>
 
 </div>
-<div class="item">
-    <a class="title">
+<div class="item {% if active == 'settings' %}active{% endif %}">
+    <a href="{% url 'settings:settings' %}" class="title">
         <span><i class="sliders horizontal icon"></i></span> Settings
     </a>
 </div>

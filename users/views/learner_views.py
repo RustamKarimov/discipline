@@ -30,3 +30,9 @@ class LearnerEdit(HasPermissionsMixin, mixins.UserEdit):
 class LearnerDelete(HasPermissionsMixin, mixins.UserDelete):
     required_permission = 'admin'
     model = Learner
+
+# todo: Change status of learner (will be performed on grade level)
+# todo: Assign Learners to grade
+# todo: Change grade of a learner
+# todo: Display information on learner detail page
+# todo: Read learners from file
