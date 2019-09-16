@@ -8,52 +8,42 @@
 {% endblock %}
 
 {% block content %}
-    <div class="ui container">
-        <h1 class="header">{{ grade }}</h1>
-        {% if request.user|can:"admin" %}
-            <div class="row">
-                <a href="{{ grade.get_update_url }}" class="ui primary basic button">
-                    Update
-                </a>
-
-                <a href="{{ grade.get_delete_url }}" class="ui red basic button">
-                    Delete
-                </a>
-
-                <a href="" class="ui primary basic button">
-                    Assign Form Teachers
-                </a>
-
-                <a href="" class="ui primary basic button">
-                    Assign Learners
-                </a>
-            </div>
-        {% endif %}
-
-        <table class="ui table">
-            <thead>
-                <tr>
-                    <th>School ID</th>
-                    <th>Name</th>
-                    <th>Merits</th>
-                    <th>Demerits</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-
-            <tbody>
+    <div class="seven wide column">
+        <div class="ui padded segment">
+            <h2 class="ui center aligned header">{{ grade }}</h2>
+            <div class="ui list">
                 {% for learner in grade.learners.all %}
-                    <tr>
-                        <td>{{ learner.learner_id }}</td>
-                        <td>{{ learner }}</td>
-                        <td>{{ learner.discipline_action.count }}</td>
-                        <td>{{ learner.discipline_action.count }}</td>
-                        <td>{{ learner.discipline_action.count }}</td>
-                        {#  todo: list merits demerits total points #}
-                    </tr>
+                    <div class="item">
+                        <img class="ui avatar image" src="{{ learner.user.image.url }}">
+                        <div class="content">
+                            <div class="header">{{ learner }}</div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="item">
+                        <p class="center aligned">No learners assigned to this class yet</p>
+                    </div>
                 {% endfor %}
+            </div>
 
-            </tbody>
-        </table>
+            {% if request.user.is_superuser %}
+                <br>
+                <div class="row">
+                    <div class="ui mini basic three icon compact buttons">
+                        <a href="{{ grade.get_update_url }}"
+                           class="ui button" title="Edit {{ grade }}">
+                            <i class="edit icon"></i>
+                        </a>
+                        <a href="{{ grade.get_delete_url }}"
+                           class="ui button" title="Delete {{ grade }}">
+                            <i class="trash icon"></i>
+                        </a>
+                        <a class="ui button" title="Print Report">
+                            <i class="file pdf icon"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
