@@ -12,7 +12,7 @@ from academic_year.models import AcademicYear
 from settings.models import Settings
 
 from .models import Grade
-from .forms import GradeForm
+from .forms import GradeForm, GradeUpdateForm
 
 
 class GradeList(generic.ListView):
@@ -110,3 +110,15 @@ class GradeDetails(generic.DetailView):
             messages.warning(request, "You don't have permission to perform this action. "
                              "Please login as another user.")
             return redirect('login')
+
+
+class GradeEdit(HasPermissionsMixin, generic.UpdateView):
+    required_permission = 'admin'
+    model = Grade
+    form_class = GradeUpdateForm
+    template_name = 'grades/update_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['active'] = 'grades'
+        return context

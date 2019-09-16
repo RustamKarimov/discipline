@@ -1,0 +1,17 @@
+{% extends 'grades/base_grades.html'%}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <div class="ui segment">
+                <h2 class="ui header">Edit {{ grade }}</h2>
+                <form method="post" class="ui form">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

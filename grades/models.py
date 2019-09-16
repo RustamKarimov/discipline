@@ -38,8 +38,8 @@ class Grade(models.Model):
     def get_absolute_url(self):
         return reverse('grades:details', args=[self.slug])
 
-    # def get_update_url(self):
-    #     return reverse('grades:update', args=[self.slug])
+    def get_update_url(self):
+        return reverse('grades:edit', args=[self.slug])
     #
     # def get_delete_url(self):
     #     return reverse('grades:delete', args=[self.slug])
