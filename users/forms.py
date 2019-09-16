@@ -50,3 +50,12 @@ class UserForm(forms.ModelForm):
                 css_class="ui clearing basic segment",
             )
         )
+
+
+class GradesToTeacherForm(forms.ModelForm):
+    class Meta:
+        model = Teacher
+        fields = ('form_class',)
+        widgets = {
+            'form_class': forms.CheckboxSelectMultiple()
+        }

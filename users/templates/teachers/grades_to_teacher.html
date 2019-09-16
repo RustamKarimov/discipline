@@ -1,0 +1,46 @@
+{% extends 'teachers/base_teachers.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">Assign Form Classes to {{ teacher }}</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+        <h1 class="ui header">Assign form class to {{ teacher }}</h1>
+
+        <form method="post" class="ui form">
+            {% csrf_token %}
+
+            <div class="ui card">
+                <div class="content">
+                    <img src="{{ teacher.image.url }}" class="right floated mini circular ui image">
+                    <div class="header">{{ teacher }}</div>
+                    <div class="meta">Form classes</div>
+                </div>
+                <div class="content">
+                    <div class="description">
+                        <div class="ui list">
+                            {% for form_class in form.form_class %}
+                                <div class="item">{{ form_class }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <input type="submit" class="ui positive button" value="Submit">
+                        <a href="{{ teacher.get_absolute_url }}" class="ui button">Cancel</a>
+                    </div>
+                </div>
+            </div>
+                </div>
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

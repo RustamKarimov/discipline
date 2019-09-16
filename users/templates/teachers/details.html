@@ -16,22 +16,6 @@
                             <img src="{{ teacher.user.image.url }}">
                         </div>
                     </div>
-                    {% if request.user.is_superuser %}
-                        <br>
-                        <div class="row">
-                            <div class="ui mini basic three icon compact buttons">
-                                <a href="{{ teacher.get_update_url }}" class="ui button" title="Edit {{ teacher }}">
-                                    <i class="edit icon"></i>
-                                </a>
-                                <a href="{{ teacher.get_delete_url }}" class="ui button" title="Delete {{ teacher }}">
-                                    <i class="trash icon"></i>
-                                </a>
-                                <a class="ui button" title="Print Report">
-                                    <i class="file pdf icon"></i>
-                                </a>
-                            </div>
-                        </div>
-                    {% endif %}
                 </div>
                 <div class="ten wide column">
                     <div class="ui list">
@@ -49,15 +33,54 @@
                         </div>
                     </div>
                 </div>
+                {% if request.user.is_superuser %}
+                    <br>
+                    <div class="row">
+                        <div class="ui mini basic four icon compact buttons">
+                            <a href="{{ teacher.get_update_url }}" class="ui button" title="Edit {{ teacher }}">
+                                <i class="edit icon"></i>
+                            </a>
+
+                            <a href="{{ teacher.get_delete_url }}" class="ui button" title="Delete {{ teacher }}">
+                                <i class="trash icon"></i>
+                            </a>
+
+                            <a href="{% url 'teachers:assign_grades' teacher.slug %}"
+                               class="ui button" title="Assign Form Classes to {{ teacher }}">
+                                <i class="chalkboard teacher icon"></i>
+                            </a>
+                            <a class="ui button" title="Print Report">
+                                <i class="file pdf icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
         <div class="ui segment">
-            {% if teacher.form_classes.count %}
-            {% else %}
-                <p>No form classes assigned to {{ teacher }}</p>
-            {% endif %}
-        </div>
+           <h2 class="ui center aligned header">Form Classes</h2>
+            {% for grade in teacher.form_class.all %}
+                <div class="ui styled accordion">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        <a href="{{ grade.get_absolute_url }}">{{ grade }}</a>
+                    </div>
+                    <div class="content">
+                        <div class="ui divided list">
+                            {% for learner in grade.learners.all %}
+                                <div class="item">
+                                    <img class="ui avatar image" src="{{ learner.image.url }}">
+                                    <div class="content">
+                                        <a href="{{ learner.get_absolute_url }}">{{ learner }}</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+         </div>
     </div>
 
     <div class="nine wide column">
