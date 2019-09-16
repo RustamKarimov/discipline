@@ -22,7 +22,7 @@ class AcademicYear(models.Model):
     year = models.PositiveIntegerField(
         validators=[validate_year],
         verbose_name='academic year',
-        help_text=f'Please add new academic year greater than {current_year()} in 4-digit format.',
+        help_text=f'Add new academic year greater than {current_year()} in 4-digit format.',
         default=current_year(),
         unique=True
     )
@@ -39,11 +39,11 @@ class AcademicYear(models.Model):
         self.slug = str(self.year)
         super().save(*args, **kwargs)
 
-    # def get_absolute_url(self):
-    #     return reverse('years:details', args=[self.slug])
+    def get_absolute_url(self):
+        return reverse('years:details', args=[self.slug])
+
+    def get_update_url(self):
+        return reverse('years:edit', args=[self.slug])
     #
-    # def get_update_url(self):
-    #     return reverse('years:update', args=[self.slug])
-    #
-    # def get_delete_url(self):
-    #     return reverse('years:delete', args=[self.slug])
+    def get_delete_url(self):
+        return reverse('years:delete', args=[self.slug])

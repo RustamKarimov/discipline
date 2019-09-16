@@ -15,5 +15,12 @@
     $('.menu .item').tab();
 
     $('.ui.checkbox').checkbox();
+
+    var year = parseInt("{{ academicyear }}");
+    $('#inline_calendar').calendar({
+        type: 'date',
+        minDate: new Date(year, 0, 1),
+        maxDate: new Date(year, 11, 31)
+    });
 </script>
 

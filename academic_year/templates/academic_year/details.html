@@ -1,0 +1,45 @@
+{% extends 'academic_year/base_academic_year.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ academicyear }} Details</a>
+{% endblock %}
+
+{% block content %}
+    <div class="seven wide column">
+        <div class="ui padded segment">
+            <div class="row">
+                <div class="ui small calendar" id="inline_calendar"></div>
+            </div>
+            <div class="row">
+                {% if request.user.is_superuser %}
+                    <br>
+                    <div class="row">
+                        <div class="ui mini basic three icon compact buttons">
+                            <a href="{{ academicyear.get_update_url }}"
+                               class="ui button" title="Edit {{ academicyear }}">
+                                <i class="edit icon"></i>
+                            </a>
+                            <a href="{{ academicyear.get_delete_url }}"
+                               class="ui button" title="Delete {{ academicyear }}">
+                                <i class="trash icon"></i>
+                            </a>
+                            <a class="ui button" title="Print Report">
+                                <i class="file pdf icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="nine wide column">
+        <div class="ui four column compact doubling grid">
+            {% include 'includes/statistics.html' with number=123 object='Merit' %}
+            {% include 'includes/statistics.html' with number=123 object='Merit' %}
+            {% include 'includes/statistics.html' with number=123 object='Demerit' %}
+            {% include 'includes/statistics.html' with number=123 object='Demerit' %}
+        </div>
+    </div>
+{% endblock %}

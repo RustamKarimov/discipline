@@ -1,0 +1,46 @@
+{% extends 'academic_year/base_academic_year.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">Add</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+
+        <div class="ui segment">
+            <form method="post" class="ui form">
+                {% csrf_token %}
+                <h2 class="ui header">{{ action }}</h2>
+                {{ form }}
+                {% if not cancel_url %}
+                    <h4 class="ui header">Current events will take place while starting new academic year</h4>
+                    <div class="ui bulleted list">
+                        <div class="item">
+                            Current year will be deactivated. Any changes on current year
+                            will be <b>disallowed</b>. If you need to do any changes,
+                            please do it before starting new academic year
+                        </div>
+                        {% for index, item in settings.items %}
+                            {% if item %}
+                                <div class="item">{{ item }}</div>
+                            {% endif %}
+                        {% endfor %}
+
+                </div>
+                {% endif %}
+                <div class="ui divider"></div>
+
+                <input type="submit" value="{{ action }}" class="ui primary basic button">
+                {% if cancel_url == 'details' %}
+                    <a href="{{ academicyear.get_absolute_url }}" class="ui red basic button">
+                {% else %}
+                    <a href="{% url 'years:list' %}" class="ui red basic button">
+                {% endif %}
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

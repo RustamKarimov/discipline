@@ -3,18 +3,18 @@
         <span><i class="th icon"></i></span> Dashboard
     </a>
 </div>
-<div class="item">
+<div class="item {% if active == 'years' %}active{% endif %}">
     <a class="title">
         <i class="dropdown icon"></i>
         <span><i class="calendar alternate icon"></i></span> Academic Year
     </a>
     <div class="content">
         <div class="ui inverted grey vertical menu">
-            <a class="item">
+            <a href="{% url 'years:list' %}" class="item">
                 <i class="list icon"></i>
                 List
             </a>
-            <a class="item">
+            <a href="{% url 'years:add' %}" class="item">
                 <i class="plus icon"></i>
                 Add
             </a>

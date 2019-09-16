@@ -1,0 +1,55 @@
+{% extends 'academic_year/base_academic_year.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">List</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <table class="ui striped grey table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Year</th>
+                        <th># of grades</th>
+                        <th># of teachers</th>
+                        <th># of learners</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for year in academicyear_list %}
+                        <tr>
+                            <td></td>
+                            <td>
+                                <a href="{{ year.get_absolute_url }}">{{ year }}</a>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">No academic year registered yet..</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+                <tfoot class="full-width">
+                    <tr>
+                        <th colspan="5">
+                            <a href="{% url 'years:add' %}" class="ui right floated small grey labeled icon button">
+                                <i class="calendar plus icon"></i> Add New Academic Year
+                            </a>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+test

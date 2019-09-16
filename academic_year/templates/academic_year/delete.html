@@ -1,0 +1,19 @@
+{% extends 'academic_year/base_academic_year.html' %}
+
+{% block content %}
+    <div class="ui container">
+        <div class="ui segment">
+            <h2 class="ui header">Delete Year "{{ academicyear }}"?</h2>
+            <form method="post">
+                {% csrf_token %}
+                <p>Are you sure you want to delete Year "{{ academicyear }}"?</p>
+                <p>
+                    Note that all of the grades and actions associated with this academic year will be deleted as well.
+                    But learners, teachers, merits and demerits will remain.
+                </p>
+                <a href="{{ academicyear.get_absolute_url }}" class="ui primary basic button">Cancel</a>
+                <input type="submit" class="ui red basic button" value="Delete">
+            </form>
+        </div>
+    </div>
+{% endblock %}

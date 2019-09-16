@@ -74,3 +74,10 @@ class SettingsForm(forms.ModelForm):
                 css_class='ui segments'
             )
         )
+
+    def clean_allow_alumni(self):
+        alumni = self.cleaned_data['allow_alumni']
+        update = self.cleaned_data['update_grades']
+        if alumni and not update:
+            raise forms.ValidationError('This option can be checked only together with updating learners')
+        return alumni
