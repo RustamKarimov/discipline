@@ -14,6 +14,10 @@ class SettingsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['allow_alumni'].widget.attrs['class'] = 'ui checkbox'
+        self.fields['allow_transfers'].widget.attrs['class'] = 'ui checkbox'
+        self.fields['allow_expulsion'].widget.attrs['class'] = 'ui checkbox'
+        self.fields['update_grades'].widget.attrs['class'] = 'ui checkbox'
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(
@@ -34,28 +38,24 @@ class SettingsForm(forms.ModelForm):
                         Div(
                             Div(
                                 'update_grades',
-                                # css_class='ui checkbox'
                             ),
                             css_class='field'
                         ),
                         Div(
                             Div(
                                 'allow_alumni',
-                                # css_class='ui checkbox'
                             ),
                             css_class='field'
                         ),
                         Div(
                             Div(
                                 'allow_transfers',
-                                # css_class='ui checkbox'
                             ),
                             css_class='field'
                         ),
                         Div(
                             Div(
                                 'allow_expulsion',
-                                # css_class='ui checkbox'
                             ),
                             css_class='field'
                         ),
