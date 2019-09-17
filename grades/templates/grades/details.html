@@ -11,6 +11,29 @@
     <div class="seven wide column">
         <div class="ui padded segment">
             <h2 class="ui center aligned header">{{ grade }}</h2>
+            <div class="ui divider"></div>
+
+            <h3 class="ui header">Form Teachers</h3>
+            <div class="ui middle aligned list">
+                {% for teacher in grade.teachers.all %}
+                    <div class="item">
+                        <img class="ui avatar image" src="{{ teacher.user.image.url }}">
+                        <div class="content">
+                            <div class="header">
+                                {% can "view_teacher" teacher user=user as can_view_teacher %}
+                                {% if can_view_teacher %}
+                                    <a href="{{ teacher.get_absolute_url }}">{{ teacher }}</a>
+                                {% else %}
+                                    {{ teacher }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="ui divider"></div>
+            <h3 class="ui header">Learners</h3>
             <div class="ui list">
                 {% for learner in grade.learners.all %}
                     <div class="item">

@@ -25,7 +25,7 @@ SECRET_KEY = ')1^59pnx!s)v7lrqm23(fo8(dp4f!54!ti#wfltaeky5^a@rf*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -138,3 +138,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CELERY_RESULT_BACKEND = "amqp"
