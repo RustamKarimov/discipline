@@ -3,6 +3,8 @@ from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML
 
+from grades.models import Grade
+
 from .models import User, Teacher, Learner
 
 
@@ -41,9 +43,17 @@ class UserForm(forms.ModelForm):
                     Submit('submit', 'Submit', css_class="ui right floated grey button"),
                     HTML("""
                         {% if 'Add' in action %}
-                            <a href="{% url 'teachers:list' %}" class="ui right floated button">Cancel</a>
+                            {% if active == 'teachers' %}
+                                <a href="{% url 'teachers:list' %}" class="ui right floated button">Cancel</a>
+                            {% else %}
+                                <a href="{% url 'learners:list' %}" class="ui right floated button">Cancel</a>
+                            {% endif %}
                         {% else %}
-                            <a href="{{ teacher.get_absolute_url }}" class="ui right floated button">Cancel</a>
+                            {% if active == 'teachers' %}
+                                <a href="{{ user.teacher.get_absolute_url }}" class="ui right floated button">Cancel</a>
+                            {% else %}
+                                <a href="{{ user.learner.get_absolute_url }}" class="ui right floated button">Cancel</a>                            
+                            {% endif %}
                         {% endif %}                    
                     """),
                 ),
@@ -59,3 +69,30 @@ class GradesToTeacherForm(forms.ModelForm):
         widgets = {
             'form_class': forms.CheckboxSelectMultiple()
         }
+
+
+class GradeFilterForm(forms.Form):
+    grades = forms.ModelChoiceField(queryset=Grade.active_grades.all(), required=False)
+    name = forms.CharField(required=False)
+
+    class Meta:
+        model = Learner
+        fields = ('name', 'grades')
+
+    def __init__(self):
+        super().__init__()
+        self.fields['grades'].widget.attrs['class'] = 'ui fluid dropdown'
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Div(
+                Div(
+                    'name',
+                    css_class='field'
+                ),
+                Div(
+                    'grades',
+                    css_class='field'
+                ),
+                css_class='two fields',
+            )
+        )

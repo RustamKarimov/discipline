@@ -34,7 +34,7 @@
 
                 <input type="submit" value="{{ action }}" class="ui primary basic button">
                 {% if cancel_url == 'details' %}
-                    <a href="{{ academicyear.get_absolute_url }}" class="ui red basic button">
+                    <a href="{{ object.get_absolute_url }}" class="ui red basic button">
                 {% else %}
                     <a href="{% url 'years:list' %}" class="ui red basic button">
                 {% endif %}

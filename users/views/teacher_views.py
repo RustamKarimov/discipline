@@ -11,7 +11,7 @@ from rolepermissions.decorators import has_permission_decorator
 from ..models import Teacher
 from ..forms import UserForm, GradesToTeacherForm
 from .. import mixins
-from users.tasks import read_teachers_from_file, add
+from users.tasks import read_teachers_from_file
 
 
 class TeacherList(HasPermissionsMixin, mixins.UserList):
@@ -69,7 +69,7 @@ class AssignGradesToTeacher(HasPermissionsMixin, generic.UpdateView):
 @has_permission_decorator('admin')
 def add_teachers_from_file(request):
     messages.info(request, 'The reading from file is in progress. You can proceed with your work. '
-                           'Once the process completed teachers will e listed in this page.')
+                           'Once the process completed teachers will be listed in this page.')
     result = read_teachers_from_file.delay()
 
     for message in result.collect():

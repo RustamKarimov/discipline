@@ -23,6 +23,11 @@ class UserList(generic.ListView):
         context['active'] = utils.get_model_name_as_plural_string(self.model)
         return context
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.filter(user__current_user=True)
+        return qs
+
 
 class UserAdd(generic.CreateView):
     model = None

@@ -16,14 +16,27 @@ class LearnerManager(models.Manager):
         return super().get_queryset().filter(is_learner=True)
 
 
+class CurrentTeacherManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_teacher=True, current_user=True)
+
+
+class CurrentLearnerManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_learner=True, current_user=True)
+
+
 class User(AbstractUser):
     image = models.ImageField(upload_to='users', default='users/no_image.png')
     user_id = models.CharField(max_length=10, unique=True)
     is_teacher = models.BooleanField(default=False)
     is_learner = models.BooleanField(default=False)
+    current_user = models.BooleanField(default=True)
     objects = UserManager()
     teachers = TeacherManager()
     learners = LearnerManager()
+    current_teachers = CurrentTeacherManager()
+    current_learners = CurrentLearnerManager()
 
     class Meta:
         ordering = ('last_name', 'first_name')
@@ -93,3 +106,9 @@ class Learner(models.Model):
 
     def get_delete_url(self):
         return reverse('learners:delete', args=[self.slug])
+
+    def get_active_grade(self):
+        return self.grades.filter(active=True).first()
+
+
+# todo: add active field to learner and teachers to separate current users and the users of previous years

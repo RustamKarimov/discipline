@@ -1,5 +1,7 @@
 {% extends 'learners/base_learners.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block breadcrumb %}
     {{ block.super }}
     <i class="right angle icon divider"></i>
@@ -7,6 +9,15 @@
 {% endblock %}
 
 {% block content %}
+    <div class="row">
+        <div class="column">
+            <form method="post" class="ui form" id="learnerForm"
+                  data-learners-url="{% url 'learners:load_learners_per_grade' %}"
+                  novalidate>
+                {% crispy form %}
+            </form>
+        </div>
+    </div>
     <div class="row">
         <div class="column">
             <table class="ui striped grey table">
@@ -20,38 +31,38 @@
                     </tr>
                 </thead>
 
-                <tbody>
-                    {% for learner in learner_list %}
-                        <tr>
-                            <td><img class="ui mini circular image" src="{{ learner.user.image.url }}"></td>
-                            <td>
-                                <a href="{{ learner.get_absolute_url }}">{{ learner.user.user_id }}</a>
-                            </td>
-                            <td>
-                                <a href="{{ learner.get_absolute_url }}">{{ learner.user.get_full_name }}</a>
-                            </td>
-                            <td>{{ learner.user.email }}</td>
-                            <td>{{ learner.grades }}</td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="5">No learner registered yet..</td>
-                        </tr>
-                    {% endfor %}
+                <tbody id="learner-list">
                 </tbody>
 
-                <tfoot class="full-width">
-                    <tr>
-                        <th colspan="5">
-                            <a href="{% url 'learners:add' %}" class="ui right floated small grey labeled icon button">
-                                <i class="user plus icon"></i> Add Learner
-                            </a>
-                        </th>
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>
 {% endblock %}
 
-test
+{% block pagination %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $("#id_grades, #id_name").on('change keyup', (function () {
+            var url = $("#learnerForm").attr("data-learners-url");  // get the url of the `load_learners` view
+            var gradeId = $("#id_grades").val();  // get the selected grade ID from the HTML input
+            var name = $("#id_name").val();
+
+            console.log('grade=' + gradeId + '||| name=' + name)
+
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-learners/)
+                data: {
+                    'grade': gradeId,       // add the grade id to the GET parameters
+                    'name': name,
+                },
+            success: function (data) {   // `data` is the return of the `load_learners` view function
+                $("#learner-list").html(data);  // replace the contents of the learner input with the data that came from the server
+                }
+            });
+
+        }));
+        </script>
+{% endblock %}

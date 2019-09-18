@@ -22,9 +22,11 @@
                             <div class="header">
                                 {% can "view_teacher" teacher user=user as can_view_teacher %}
                                 {% if can_view_teacher %}
-                                    <a href="{{ teacher.get_absolute_url }}">{{ teacher }}</a>
+                                    <a href="{{ teacher.get_absolute_url }}">
+                                        <div style="width: 170px; word-wrap: break-word;">  {{ teacher }}</div>
+                                    </a>
                                 {% else %}
-                                    {{ teacher }}
+                                    <div style="width: 170px; word-wrap: break-word;">  {{ teacher }}</div>
                                 {% endif %}
                             </div>
                         </div>
@@ -39,7 +41,11 @@
                     <div class="item">
                         <img class="ui avatar image" src="{{ learner.user.image.url }}">
                         <div class="content">
-                            <div class="header">{{ learner }}</div>
+                            <div class="header">
+                                <a href="{{ learner.get_absolute_url }}">
+                                    <div style="width: 170px; word-wrap: break-word;">  {{ learner }}</div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 {% empty %}

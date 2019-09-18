@@ -1,0 +1,23 @@
+
+    {% for learner in learner_list %}
+        <tr>
+            <td><img class="ui mini circular image" src="{{ learner.user.image.url }}"></td>
+            <td>
+                <a href="{{ learner.get_absolute_url }}">{{ learner.user.user_id }}</a>
+            </td>
+            <td>
+                <a href="{{ learner.get_absolute_url }}">{{ learner.user.get_full_name }}</a>
+            </td>
+            <td>{{ learner.user.email }}</td>
+            <td>
+                <a href="{{ learner.get_active_grade.get_absolute_url }}">
+                    {{ learner.get_active_grade }}
+                </a>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="5">No learner registered yet..</td>
+        </tr>
+    {% endfor %}
+

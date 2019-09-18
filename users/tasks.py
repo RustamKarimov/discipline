@@ -20,13 +20,7 @@ LEARNERS_FILENAME = 'static/excel/learners.xlsx'
 TEACHERS_FILENAME = 'static/excel/teachers.xlsx'
 
 
-@shared_task
-def add(x, y):
-    return x + y
-
-
-@shared_task
-def read_teachers_from_file(filename=TEACHERS_FILENAME):
+def get_user_or_create(model, filename):
     data = pd.read_excel(filename, index_col=False)
     year = AcademicYear.objects.get(active=True)
     division = Settings.objects.first().division
@@ -44,30 +38,47 @@ def read_teachers_from_file(filename=TEACHERS_FILENAME):
         else:
             grade = None
 
-        teacher_id = row['SchoolId']
+        user_id = row['SchoolId']
         first_name = row['FirstName']
         last_name = row['LastName']
 
         user_model = get_user_model()
 
         user, created = user_model.objects.get_or_create(
-            user_id=teacher_id,
-            username=teacher_id,
+            user_id=user_id,
+            username=user_id,
             first_name=first_name,
             last_name=last_name,
         )
 
         if created:
-            user.set_password(teacher_id)
+            user.set_password(user_id)
             user.save()
-            assign_role(user, 'teacher_role')
 
-            slug_str = f"{teacher_id} {first_name} {last_name}"
-
-            teacher, teacher_created = Teacher.objects.get_or_create(
+            user_type, user_type_created = model.objects.get_or_create(
                 user=user,
             )
-            if grade:
-                teacher.form_class.add(grade)
 
+            if model == Learner:
+                assign_role(user, 'learner_role')
+                if grade:
+                    user_type.grades.add(grade)
+                user.is_learner = True
+            else:
+                assign_role(user, 'teacher_role')
+                if grade:
+                    user_type.form_class.add(grade)
+                user.is_teacher = True
+
+            user.save()
+
+@shared_task
+def read_learners_from_file(filename=LEARNERS_FILENAME):
+    get_user_or_create(Learner, filename)
+
+
+
+@shared_task
+def read_teachers_from_file(filename=TEACHERS_FILENAME):
+    get_user_or_create(Teacher, filename)
     return 'Reading teachers from file completed...'

@@ -7,71 +7,82 @@
 {% endblock %}
 
 {% block content %}
-        <div class="seven wide column">
-            <div class="ui padded segment">
-                <div class="ui two column grid">
-                    <div class="six wide column">
-                        <div class="row">
-                            <div class="ui rounded fluid image">
-                                <img src="{{ learner.user.image.url }}">
-                            </div>
+    <div class="seven wide column">
+        <div class="ui padded segment">
+            <div class="ui two column grid">
+                <div class="six wide column">
+                    <div class="row">
+                        <div class="ui rounded fluid image">
+                            <img src="{{ learner.user.image.url }}">
                         </div>
-                        {% if request.user.is_superuser %}
-                            <br>
-                            <div class="row">
-                                <div class="ui mini basic three icon compact buttons">
-                                    <a href="{{ learner.get_update_url }}" class="ui button" title="Edit {{ learner }}">
-                                        <i class="edit icon"></i>
-                                    </a>
-                                    <a href="{{ learner.get_delete_url }}" class="ui button" title="Delete {{ learner }}">
-                                        <i class="trash icon"></i>
-                                    </a>
-                                    <a class="ui button" title="Print Report">
-                                        <i class="file pdf icon"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        {% endif %}
                     </div>
-                    <div class="ten wide column">
-                        <div class="ui list">
-                            <div class="item">
-                                <div class="header">User ID</div>
-                                {{ learner.user.user_id }}
-                            </div>
-                            <div class="item">
-                                <div class="header">Name</div>
-                                {{learner}}
-                            </div>
-                            <div class="item" style="word-wrap: break-word">
-                                <div class="header">Email</div>
+                </div>
+                <div class="ten wide column">
+                    <div class="ui list">
+                        <div class="item">
+                            <div class="header">User ID</div>
+                            {{ learner.user.user_id }}
+                        </div>
+                        <div class="item">
+                            <div class="header">Name</div>
+                            {{learner}}
+                        </div>
+                        <div class="item" style="word-wrap: break-word">
+                            <div class="header">Email</div>
+                            {% if learner.user.email %}
                                 {{ learner.user.email|wordwrap:21 }}
-                            </div>
+                            {% else %}
+                                -----------------
+                            {% endif %}
+
+                        </div>
+                        <div class="item" style="word-wrap: break-word">
+                            <div class="header">Grade</div>
+                            <a href="{{ learner.get_active_grade.get_absolute_url }}">
+                                {{ learner.get_active_grade }}
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-
-                <div class="ui two column grid">
-                    {% include 'includes/statistics.html' with number=123 object='Merit' %}
-                    {% include 'includes/statistics.html' with number=123 object='Demerit' %}
+            {% if request.user.is_superuser %}
+                <br>
+                <div class="row">
+                    <div class="ui mini basic three icon compact buttons">
+                        <a href="{{ learner.get_update_url }}" class="ui button" title="Edit {{ learner }}">
+                            <i class="edit icon"></i>
+                        </a>
+                        <a href="{{ learner.get_delete_url }}" class="ui button" title="Delete {{ learner }}">
+                            <i class="trash icon"></i>
+                        </a>
+                        <a class="ui button" title="Print Report">
+                            <i class="file pdf icon"></i>
+                        </a>
+                    </div>
                 </div>
+            {% endif %}
         </div>
 
-        <div class="nine wide column">
-            <div class="ui segment">
-                <div class="ui top attached tabular centered pointing secondary menu">
-                    <div class="center item active" data-tab="one">Merits</div>
-                    <div class="center item" data-tab="two">Demerits</div>
-                </div>
-                <div class="ui bottom attached tab segment active" data-tab="one">
-                    <p>First</p>
-                    <p>Tab</p>
-                </div>
-                <div class="ui bottom attached tab segment" data-tab="two">
-                    <p>Second</p>
-                    <p>Tab</p>
-                </div>
+            <div class="ui two column grid">
+                {% include 'includes/statistics.html' with number=123 object='Merit' %}
+                {% include 'includes/statistics.html' with number=123 object='Demerit' %}
+            </div>
+    </div>
+
+    <div class="nine wide column">
+        <div class="ui segment">
+            <div class="ui top attached tabular centered pointing secondary menu">
+                <div class="center item active" data-tab="one">Merits</div>
+                <div class="center item" data-tab="two">Demerits</div>
+            </div>
+            <div class="ui bottom attached tab segment active" data-tab="one">
+                <p>First</p>
+                <p>Tab</p>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="two">
+                <p>Second</p>
+                <p>Tab</p>
             </div>
         </div>
+    </div>
 {% endblock %}

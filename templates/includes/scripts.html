@@ -23,6 +23,8 @@
         $(this).closest('.message').transition('fade');
     });
 
-    $('select.dropdown').dropdown();
+    $('select.dropdown').dropdown({clearable: true});
+
+    $('table').tablesort()
 </script>
 
