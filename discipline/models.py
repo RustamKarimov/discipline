@@ -44,11 +44,13 @@ class Discipline(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.code)
 
+        return super().save(*args, **kwargs)
+
     def get_absolute_url(self):
-        return reverse('discipline:detail', args=[self.slug])
+        return reverse('discipline:details', args=[self.slug])
 
     def get_update_url(self):
-        return reverse('discipline:update', args=[self.slug])
+        return reverse('discipline:edit', args=[self.slug])
 
     def get_delete_url(self):
         return reverse('discipline:delete', args=[self.slug])

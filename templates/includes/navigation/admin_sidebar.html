@@ -3,6 +3,7 @@
         <span><i class="th icon"></i></span> Dashboard
     </a>
 </div>
+
 <div class="item {% if active == 'years' %}active{% endif %}">
     <a class="title">
         <i class="dropdown icon"></i>
@@ -20,8 +21,8 @@
             </a>
         </div>
     </div>
-
 </div>
+
 <div class="item {% if active == 'grades' %}active{% endif %}">
     <a class="title">
         <i class="dropdown icon"></i>
@@ -39,8 +40,8 @@
             </a>
        </div>
     </div>
-
 </div>
+
 <div class="item {% if active == 'teachers' %}active{% endif %}">
     <a class="title">
         <i class="dropdown icon"></i>
@@ -62,8 +63,8 @@
             </a>
        </div>
     </div>
-
 </div>
+
 <div class="item {% if active == 'learners' %}active{% endif %}">
     <a class="title">
         <i class="dropdown icon"></i>
@@ -89,56 +90,58 @@
             </a>
        </div>
     </div>
-
 </div>
-<div class="item">
+
+<div class="item {% if active == 'merits' %}active{% endif %}">
     <a class="title">
         <i class="dropdown icon"></i>
         <span><i class="thumbs up icon"></i></span> Merits
     </a>
     <div class="content">
         <div class="ui inverted grey vertical menu">
-            <a class="item">
+            <a href="{% url 'discipline:merit_list' %}" class="item">
                 <i class="list icon"></i>
                 List
             </a>
-            <a class="item">
+            <a href="{% url 'discipline:merit_add' %}" class="item">
                 <i class="plus icon"></i>
                 Add
             </a>
        </div>
     </div>
-
 </div>
-<div class="item">
+
+<div class="item {% if active == 'demerits' %}active{% endif %}">
     <a class="title">
         <i class="dropdown icon"></i>
         <span><i class="thumbs down icon"></i></span> Demerits
     </a>
     <div class="content">
         <div class="ui inverted grey vertical menu">
-            <a class="item">
+            <a href="{% url 'discipline:demerit_list' %}" class="item">
                 <i class="list icon"></i>
                 List
             </a>
-            <a class="item">
+            <a href="{% url 'discipline:demerit_add' %}" class="item">
                 <i class="plus icon"></i>
                 Add
             </a>
        </div>
     </div>
-
 </div>
+
 <div class="item {% if active == 'settings' %}active{% endif %}">
     <a href="{% url 'settings:settings' %}" class="title">
         <span><i class="sliders horizontal icon"></i></span> Settings
     </a>
 </div>
+
 <div class="item">
     <a href="{% url 'password_change' %}" class="title">
         <span><i class="lock open icon"></i></span> Change Password
     </a>
 </div>
+
 <div class="item">
     <a href="{% url 'logout' %}" class="title">
         <span><i class="door open icon"></i></span> Logout

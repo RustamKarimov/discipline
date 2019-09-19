@@ -1,0 +1,78 @@
+{% extends 'discipline/base_discipline.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ discipline_type }}</a>
+    <i class="right angle icon divider"></i>
+    <a class="section">Add</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+        <h1 class="header">Add {{ discipline_type.title }}</h1>
+        <form method="post" class="ui form">
+            {% csrf_token %}
+            {{ form.management_form }}
+
+            <div class="ui segment">
+                    <div id="form_set">
+                        {% for subform in form %}
+                            <div class="no_error">
+                                <div class="fields">
+                                    <div class="field">
+                                        {{ subform.code.label }}
+                                        {{ subform.code }}
+                                    </div>
+                                    <div class="field">
+                                        {{ subform.description.label }}
+                                        {{ subform.description }}
+                                    </div>
+                                    <div class="field">
+                                        {{ subform.point.label }}
+                                        {{ subform.point }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div id="empty_form" style="display:none">
+                        <div class="no_error">
+                            <div class="fields">
+                                <div class="field">
+                                    {{ form.empty_form.code.label }}
+                                    {{ form.empty_form.code }}
+                                </div>
+                                <div class="field">
+                                    {{ form.empty_form.description.label }}
+                                    {{ form.empty_form.description }}
+                                </div>
+                                <div class="field">
+                                    {{ form.empty_form.point.label }}
+                                    {{ form.empty_form.point }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ui buttons">
+                        <input id="add_more" class="ui positive button" type="button" value="Add Another"/>
+                        <div class="or"></div>
+                        <button type="submit" class="ui primary button">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('#add_more').click(function() {
+            var form_idx = $('#id_form-TOTAL_FORMS').val();
+            $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+            $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        });
+    </script>
+{% endblock %}

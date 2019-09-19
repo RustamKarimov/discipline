@@ -1,0 +1,29 @@
+{% extends 'academic_year/base_academic_year.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a href="{% url list_url %}" class="section">{{ discipline_type }}</a>
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ discipline.code}} Delete</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+
+            <div class="ui segment">
+                <h2>Delete "{{ discipline }}"?</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <p>Are you sure you want to delete "{{ discipline }}"?</p>
+                    <p>
+                        Note that all of the actions associated with this {{ discipline_type }} will be deleted as well.
+                    </p>
+                    <input type="submit" class="ui negative button" value="Delete">
+                    <a href="{{ discipline.get_absolute_url }}" class="ui positive button">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

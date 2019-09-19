@@ -1,0 +1,21 @@
+{% extends 'discipline/base_discipline.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a href="{% url list_url %}" class="section">{{ discipline_type }}</a>
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ discipline.code}} Details</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <div class="ui segment">
+                <h2 class="header">{{ discipline }}</h2>
+                <a href="{{ discipline.get_update_url }}">Update</a>
+                <a href="{{ discipline.get_delete_url }}">Delete</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

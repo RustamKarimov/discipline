@@ -1,6 +1,5 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.views import generic
 
 from rolepermissions.mixins import HasPermissionsMixin
 from rolepermissions.decorators import has_permission_decorator
@@ -47,6 +46,7 @@ class LearnerDelete(HasPermissionsMixin, mixins.UserDelete):
 
 
 # todo: Assign Learners to grade
+@has_permission_decorator('admin')
 def assign_grades_to_learners(request):
     form = GradeFilterForm()
     context = {'form': form}

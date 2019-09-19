@@ -1,0 +1,36 @@
+{% extends 'discipline/base_discipline.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ discipline_type }}</a>
+    <i class="right angle icon divider"></i>
+    <a class="section">List</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <table class="ui striped stackable table">
+            <thead>
+                <tr>
+                    <th class="four wide">Code</th>
+                    <th class="ten wide">Description</th>
+                    <th class="left aligned two wide">Point</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for discipline in discipline_list %}
+                    <tr>
+                        <td class="collapsing">
+                            <a href="{{ discipline.get_absolute_url }}">{{ discipline.code }}</a>
+                        </td>
+                        <td> {{discipline.description}} </td>
+                        <td class="collapsing">{{ discipline.point }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+{% endblock %}

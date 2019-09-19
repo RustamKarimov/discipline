@@ -1,0 +1,42 @@
+{% extends 'discipline/base_discipline.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a href="{% url list_url %}" class="section">{{ discipline_type }}</a>
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ discipline.code}} Edit</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <h2 class="header">Edit {{ discipline_type.title }}</h2>
+            <form method="post" class="ui form">
+                {% csrf_token %}
+
+                <div class="ui segment">
+                   <div class="fields">
+                        <div class="field">
+                            {{ form.code.label }}
+                            {{ form.code }}
+                        </div>
+                        <div class="field">
+                            {{ form.description.label }}
+                            {{ form.description }}
+                        </div>
+                        <div class="field">
+                            {{ form.point.label }}
+                            {{ form.point }}
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Update" class="ui primary button">
+                    <a href="{{ cancel_url }}" class="ui button">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
