@@ -50,8 +50,6 @@
             var gradeId = $("#id_grades").val();  // get the selected grade ID from the HTML input
             var name = $("#id_name").val();
 
-            console.log('grade=' + gradeId + '||| name=' + name)
-
             $.ajax({                       // initialize an AJAX request
                 url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-learners/)
                 data: {

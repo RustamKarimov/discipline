@@ -14,11 +14,14 @@ def get_learners(request):
         name = request.GET.get('name')
     except:
         name = None
+
     if grade_id:
         grade = Grade.objects.get(id=grade_id)
         learners = Learner.objects.filter(grades=grade, user__current_user=True)
-    else:
+    elif not name:
         learners = Learner.objects.filter(user__current_user=True, grades=None)
+    else:
+        learners = Learner.objects.filter(user__current_user=True)
 
     if name:
         learners = learners.filter(Q(user__first_name__icontains=name) | Q(user__last_name__icontains=name))

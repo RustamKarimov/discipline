@@ -72,8 +72,8 @@ class GradesToTeacherForm(forms.ModelForm):
 
 
 class GradeFilterForm(forms.Form):
-    grades = forms.ModelChoiceField(queryset=Grade.active_grades.all(), required=False)
-    name = forms.CharField(required=False)
+    grades = forms.ModelChoiceField(queryset=Grade.active_grades.all(), required=False, label='Select Grade')
+    name = forms.CharField(required=False, label='Search learner')
 
     class Meta:
         model = Learner
