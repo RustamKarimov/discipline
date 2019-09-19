@@ -1,11 +1,15 @@
 from django.views import generic
 from django.urls import reverse_lazy
+from django.contrib import messages
+from django.shortcuts import redirect
 
 from rolepermissions.mixins import HasPermissionsMixin
+from rolepermissions.decorators import has_permission_decorator
 
 from . import mixins
 from .models import Discipline, DisciplineAction
 from .forms import DisciplineForm
+from discipline.tasks import read_discipline_from_file
 
 
 class MeritList(HasPermissionsMixin, mixins.DisciplineListMixin):
@@ -75,3 +79,27 @@ class DisciplineDelete(HasPermissionsMixin, generic.DeleteView):
         if discipline.is_demerit:
             return reverse_lazy('discipline:demerit_list')
         return reverse_lazy('discipline:merit_list')
+
+
+@has_permission_decorator('admin')
+def add_merit_from_file(request):
+    messages.info(request, 'The reading from file is in progress. You can proceed with your work. '
+                           'Once the process completed merits will be listed in this page.')
+    result = read_discipline_from_file.delay(discipline='merit')
+
+    for message in result.collect():
+        messages.info(request, message[1])
+
+    return redirect('discipline:merit_list')
+
+
+@has_permission_decorator('admin')
+def add_demerit_from_file(request):
+    messages.info(request, 'The reading from file is in progress. You can proceed with your work. '
+                           'Once the process completed demerits will be listed in this page.')
+    result = read_discipline_from_file.delay(discipline='demerit')
+
+    for message in result.collect():
+        messages.info(request, message[1])
+
+    return redirect('discipline:demerit_list')

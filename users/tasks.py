@@ -75,6 +75,7 @@ def get_user_or_create(model, filename):
 @shared_task
 def read_learners_from_file(filename=LEARNERS_FILENAME):
     get_user_or_create(Learner, filename)
+    return 'Reading learners from file completed...'
 
 
 

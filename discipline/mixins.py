@@ -113,33 +113,3 @@ class DisciplineDelete(HasPermissionsMixin, generic.DeleteView):
             return reverse_lazy('discipline:demerit_list')
         return reverse_lazy('discipline:merit_list')
 
-
-@has_permission_decorator('admin')
-def read_merits_from_file(request):
-    current_url = resolve(request.path_info).url_name
-    if current_url == 'merit_read':
-        filename = MERIT_FILENAME
-        discipline_type = Discipline.MERIT
-        redirect_url = 'discipline:merit_list'
-    else:
-        filename = DEMERIT_FILENAME
-        discipline_type = Discipline.DEMERIT
-        redirect_url = 'discipline:demerit_list'
-
-    data = pd.read_excel(filename, index_col=None)
-    for index, row in data.iterrows():
-        code = row['CODE']
-        description = row['REASON']
-        point = row['POINTS']
-
-        if code and description and point:
-            merit, created = Discipline.objects.get_or_create(
-                code=code,
-                description=description,
-                point=point,
-                discipline_type=discipline_type,
-                slug=code,
-            )
-
-    messages.info(request, 'Reading from file has been completed... ')
-    return redirect(redirect_url)
