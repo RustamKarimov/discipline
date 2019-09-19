@@ -96,3 +96,16 @@ class GradeFilterForm(forms.Form):
                 css_class='two fields',
             )
         )
+
+
+class AssignGradesToLearnersForm(forms.ModelForm):
+    grades = forms.ModelChoiceField(queryset=Grade.active_grades.all(), required=False)
+
+    class Meta:
+        model = Learner
+        fields = ('grades',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['grades'].widget.attrs['class'] = 'ui dropdown'
+        self.fields['grades'].required = False

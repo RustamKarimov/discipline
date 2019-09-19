@@ -1,0 +1,55 @@
+{% extends 'learners/base_learners.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">Assign Grades to Learners</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <form method="post" class="ui form" id="learnerForm"
+                  data-learners-url="{% url 'learners:grade_formset_for_learners' %}"
+                  novalidate>
+                {% crispy form %}
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <form method="post" action="{% url 'learners:grade_formset_for_learners' %}"
+                  class="ui form" id="gradeLearnerForm">
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block pagination %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $("#id_grades, #id_name").on('change keyup', (function () {
+            var url = $("#learnerForm").attr("data-learners-url");  // get the url of the `load_learners` view
+            var gradeId = $("#id_grades").val();  // get the selected grade ID from the HTML input
+            var name = $("#id_name").val();
+
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-learners/)
+                data: {
+                    'grade': gradeId,       // add the grade id to the GET parameters
+                    'name': name,
+                },
+            success: function (data) {   // `data` is the return of the `load_learners` view function
+                $("#gradeLearnerForm").html(data);  // replace the contents of the learner input with the data that came from the server
+                }
+            });
+
+        }));
+        </script>
+{% endblock %}

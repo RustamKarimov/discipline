@@ -1,5 +1,6 @@
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+from django.views import generic
 
 from rolepermissions.mixins import HasPermissionsMixin
 from rolepermissions.decorators import has_permission_decorator
@@ -43,10 +44,16 @@ class LearnerDelete(HasPermissionsMixin, mixins.UserDelete):
     model = Learner
 
 # todo: Change status of learner (will be performed on grade level)
+
+
 # todo: Assign Learners to grade
+def assign_grades_to_learners(request):
+    form = GradeFilterForm()
+    context = {'form': form}
+    return render(request, 'learners/grades_to_learners.html', context)
+
 # todo: Change grade of a learner
 # todo: Display information on learner detail page
-# todo: Read learners from file
 
 
 @has_permission_decorator('admin')
@@ -59,3 +66,5 @@ def add_learners_from_file(request):
         messages.info(request, message[1])
 
     return redirect('learners:list')
+
+
