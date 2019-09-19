@@ -14,7 +14,9 @@
             <form method="post" class="ui form" id="learnerForm"
                   data-learners-url="{% url 'learners:grade_formset_for_learners' %}"
                   novalidate>
-                {% crispy form %}
+{#                {% crispy form %}#}
+                <h4 class="ui header">Select Grade</h4>
+                {{ form.grades }}
             </form>
         </div>
     </div>
@@ -34,16 +36,30 @@
 
 {% block scripts %}
     <script>
-        $("#id_grades, #id_name").on('change keyup', (function () {
+
+        $(function() {
             var url = $("#learnerForm").attr("data-learners-url");  // get the url of the `load_learners` view
             var gradeId = $("#id_grades").val();  // get the selected grade ID from the HTML input
-            var name = $("#id_name").val();
 
             $.ajax({                       // initialize an AJAX request
                 url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-learners/)
                 data: {
                     'grade': gradeId,       // add the grade id to the GET parameters
-                    'name': name,
+                },
+            success: function (data) {   // `data` is the return of the `load_learners` view function
+                $("#gradeLearnerForm").html(data);  // replace the contents of the learner input with the data that came from the server
+                }
+            });
+        });
+
+        $("#id_grades").on('change', (function () {
+            var url = $("#learnerForm").attr("data-learners-url");  // get the url of the `load_learners` view
+            var gradeId = $("#id_grades").val();  // get the selected grade ID from the HTML input
+
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-learners/)
+                data: {
+                    'grade': gradeId,       // add the grade id to the GET parameters
                 },
             success: function (data) {   // `data` is the return of the `load_learners` view function
                 $("#gradeLearnerForm").html(data);  // replace the contents of the learner input with the data that came from the server
@@ -51,5 +67,7 @@
             });
 
         }));
+
+        {#$("#id_grades").#}
         </script>
 {% endblock %}

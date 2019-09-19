@@ -10,12 +10,15 @@ from .forms import AssignGradesToLearnersForm
 
 def get_learners(request):
     grade_id = request.GET.get('grade')
-    name = request.GET.get('name')
+    try:
+        name = request.GET.get('name')
+    except:
+        name = None
     if grade_id:
         grade = Grade.objects.get(id=grade_id)
         learners = Learner.objects.filter(grades=grade, user__current_user=True)
     else:
-        learners = Learner.objects.filter(user__current_user=True)
+        learners = Learner.objects.filter(user__current_user=True, grades=None)
 
     if name:
         learners = learners.filter(Q(user__first_name__icontains=name) | Q(user__last_name__icontains=name))
@@ -44,14 +47,9 @@ def grade_formset_for_learners(request):
             for form in formset:
                 if form.is_valid() and form.cleaned_data:
                     learner = form.cleaned_data['id']
-                    print(learner)
-
-                    # grade_id = form.cleaned_data['grades']
-                    # print(grade_id, type(grade_id))
-                    # grade = Grade.objects.get(id=grade_id)
-                    # print(grade, type(grade))
 
                     grade = form.cleaned_data['grades']
+                    print(grade, learner)
 
                     if grade:
                         ex_grade = learner.get_active_grade()

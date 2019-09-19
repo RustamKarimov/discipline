@@ -104,8 +104,3 @@ class AssignGradesToLearnersForm(forms.ModelForm):
     class Meta:
         model = Learner
         fields = ('grades',)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['grades'].widget.attrs['class'] = 'ui dropdown'
-        self.fields['grades'].required = False
