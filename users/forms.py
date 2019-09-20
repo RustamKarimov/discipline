@@ -104,3 +104,13 @@ class AssignGradesToLearnersForm(forms.ModelForm):
     class Meta:
         model = Learner
         fields = ('grades',)
+
+
+class SelectLearnerForm(forms.Form):
+    grade = forms.ModelChoiceField(queryset=Grade.objects.all())
+    learner = forms.ModelChoiceField(queryset=Learner.objects)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['grade'].widget.attrs['class'] = 'ui dropdown'
+        self.fields['learner'].widget.attrs['class'] = 'ui dropdown'

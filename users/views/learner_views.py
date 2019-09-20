@@ -66,5 +66,3 @@ def add_learners_from_file(request):
         messages.info(request, message[1])
 
     return redirect('learners:list')
-
-

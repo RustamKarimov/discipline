@@ -1,0 +1,123 @@
+{% extends 'teachers/base_teachers.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">Add Merit</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+        <h2 class="ui header">Select Learner</h2>
+        <form method="post" class="ui form" id="learnerForm"
+              data-learners-url="{% url 'teachers:ajax_load_learners' %}"
+              novalidate>
+            {% csrf_token %}
+
+            {{ learner_form.errors }}
+            {{ formset.management_form }}
+
+
+            <div class="ui segment">
+                <div class="two fields">
+                    <div class="field">
+                        <label>{{ learner_form.grade.label }}</label>
+                        {{ learner_form.grade }}
+                        {{ learner_form.grade.errors }}
+                    </div>
+                    <div class="field">
+                        <label>{{ learner_form.learner.label }}</label>
+                        {{ learner_form.learner }}
+                        {{ learner_form.learner.errors }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui segment">
+                <h2 class="ui header">Add {{ action }}</h2>
+                <div id="form_set">
+                    {% for form in formset %}
+                        <div class="no_error">
+                            <div class="ui two fields">
+                                <div class="field">
+                                    {{ form.action.label }}
+                                    {{ form.action }}
+                                </div>
+                                <div class="field">
+                                    {{ form.time.label }}
+                                    <div class=" year_first_calendar">
+                                        <div class="ui input left icon">
+                                            <i class="calendar icon"></i>
+                                            {{ form.time}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div id="empty_form" style="display:none">
+                    <div class="no_error">
+                        <div class="ui two fields">
+                            <div class="field">
+                                {{ formset.empty_form.action.label }}
+                                {{ formset.empty_form.action }}
+                            </div>
+                            <div class="field">
+                                {{ formset.empty_form.time.label }}
+                                <div class=" year_first_calendar">
+                                    <div class="ui input left icon">
+                                        <i class="calendar icon"></i>
+                                        {{ formset.empty_form.time}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="ui buttons">
+                <input id="add_more" class="ui positive button" type="button" value="Add Another"/>
+                <div class="or"></div>
+                <button type="submit" class="ui primary button">Submit</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $("#id_grade").change(function () {
+
+            var url = $("#learnerForm").attr("data-learners-url");  // get the url of the `load_learners` view
+            var gradeId = $(this).val();  // get the selected grade ID from the HTML input
+
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-learners/)
+                data: {
+                'grade': gradeId       // add the grade id to the GET parameters
+            },
+            success: function (data) {   // `data` is the return of the `load_learners` view function
+                $("#id_learner").html(data);  // replace the contents of the learner input with the data that came from the server
+                }
+            });
+
+        });
+
+        $('select.dropdown').dropdown();
+
+        $('#add_more').click(function() {
+            var form_idx = $('#id_form-TOTAL_FORMS').val();
+            $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+            $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        });
+
+        {#$('.year_first_calendar').calendar({#}
+        {#    startMode: 'month'#}
+        {##}
+        {#    });#}
+    </script>
+{% endblock %}

@@ -14,23 +14,21 @@ class MeritModelChoiceField(forms.ModelChoiceField):
         return obj.description
 
 
-class MeritActionForm(forms.ModelForm):
-    action = MeritModelChoiceField(queryset=Discipline.objects.filter(discipline_type=Discipline.MERIT))
+class DisciplineActionForm(forms.ModelForm):
+    action = MeritModelChoiceField(queryset=Discipline.objects.none())
 
     class Meta:
         model = DisciplineAction
         fields = ('action', 'time')
 
     def __init__(self, *args, **kwargs):
+        try:
+            discipline_type = kwargs.pop('discipline_type')
+        except:
+            discipline_type = None
         super().__init__(*args, **kwargs)
-
-
-class DemeritActionForm(forms.ModelForm):
-    action = MeritModelChoiceField(queryset=Discipline.objects.filter(discipline_type=Discipline.DEMERIT))
-
-    class Meta:
-        model = DisciplineAction
-        fields = ('action', 'time')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        if not discipline_type:
+            self.fields['action'].queryset = Discipline.objects.all()
+        else:
+            self.fields['action'].queryset = Discipline.merits.all() if discipline_type.lower() == 'merit' \
+                else Discipline.demerits.all()

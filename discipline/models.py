@@ -10,12 +10,12 @@ from users.models import Learner, Teacher
 
 class MeritManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_merit=True)
+        return super().get_queryset().filter(discipline_type=Discipline.MERIT)
 
 
 class DemeritManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_demerit=True)
+        return super().get_queryset().filter(discipline_type=Discipline.DEMERIT)
 
 
 class Discipline(models.Model):
