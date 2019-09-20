@@ -1,17 +1,13 @@
-import pandas as pd
-
-from django.shortcuts import render, redirect
 from django.views import generic
 from django.forms import modelformset_factory, BaseModelFormSet
 from django.urls import reverse_lazy
 from django.db import transaction
-from django.contrib import messages
-from django.urls import resolve
+from django.db.models import CharField, IntegerField
+from django.db.models.functions import Cast
 
-from .models import Discipline, DisciplineAction
+from .models import Discipline
 from .forms import DisciplineForm
 
-from rolepermissions.decorators import has_permission_decorator
 from rolepermissions.mixins import HasPermissionsMixin
 
 
@@ -22,7 +18,7 @@ DEMERIT_FILENAME = 'static/excel/demerits.xlsx'
 class DisciplineListMixin(generic.ListView):
     model = Discipline
     discipline_type = None
-    paginate_by = 15
+    paginate_by = 10
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -36,6 +32,8 @@ class DisciplineListMixin(generic.ListView):
             queryset = qs.filter(discipline_type=Discipline.MERIT)
         else:
             queryset = qs.filter(discipline_type=Discipline.DEMERIT)
+        queryset = queryset.annotate(text_part=Cast('code', CharField()),
+                                     num_part=Cast('code', IntegerField())).order_by('point', 'num_part')
         return queryset
 
 

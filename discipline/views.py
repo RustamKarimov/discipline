@@ -58,6 +58,7 @@ class DisciplineEdit(HasPermissionsMixin, generic.UpdateView):
         context['active'] = 'demerits' if discipline.is_demerit else 'merits'
         context['discipline_type'] = 'Demerit' if discipline.is_demerit else 'Merit'
         context['cancel_url'] = discipline.get_absolute_url()
+        context['list_url'] = 'discipline:demerit_list' if discipline.is_demerit else 'discipline:merit_list'
         return context
 
 
