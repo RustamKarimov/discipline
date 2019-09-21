@@ -11,19 +11,21 @@
 
 <div class="ui item">
     <i class="thumbs up icon"></i>
-    <div class="header">Give Merit</div>
+    <div class="header">Merits</div>
     <div class="menu">
-        <a href="{% url 'teachers:select_merit_grade' request.user.teacher.slug %}" class="item">To Grade</a>
-        <a href="{% url 'teachers:merit_to_learner' request.user.teacher.slug %}" class="item">To Learner</a>
+        <a href="{% url 'teachers:merit_list' request.user.teacher.slug %}" class="item">List</a>
+        <a href="{% url 'teachers:select_merit_grade' request.user.teacher.slug %}" class="item">Add To Grade</a>
+        <a href="{% url 'teachers:merit_to_learner' request.user.teacher.slug %}" class="item">Add To Learner</a>
     </div>
 </div>
 
 <div class="ui item">
     <i class="thumbs down icon"></i>
-    <div class="header">Give Demerit</div>
+    <div class="header">Demerits</div>
     <div class="menu">
-        <a href="{% url 'teachers:select_demerit_grade' request.user.teacher.slug %}" class="item">To Grade</a>
-        <a href="{% url 'teachers:demerit_to_learner' request.user.teacher.slug %}" class="item">To Learner</a>
+        <a href="{% url 'teachers:demerit_list' request.user.teacher.slug %}" class="item">List</a>
+        <a href="{% url 'teachers:select_demerit_grade' request.user.teacher.slug %}" class="item">Add To Grade</a>
+        <a href="{% url 'teachers:demerit_to_learner' request.user.teacher.slug %}" class="item">Add To Learner</a>
     </div>
 </div>
 

@@ -166,3 +166,50 @@ def add_discipline_action_to_grade(request, slug):
     }
 
     return render(request, 'teachers/discipline_to_grade.html', context)
+
+
+class DisciplineActionList(generic.ListView):
+    model = DisciplineAction
+    paginate_by = 10
+    template_name = 'teachers/discipline_list.html'
+
+    def get(self, request, *args, **kwargs):
+        teacher_slug = self.kwargs['slug']
+        teacher = get_object_or_404(Teacher, slug=teacher_slug)
+
+        if teacher != request.user.teacher:
+            messages.warning(request, "You don't have permission to perform this action. "
+                             "Please login as another user.")
+            return redirect('login')
+
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        teacher_slug = self.kwargs['slug']
+        teacher = get_object_or_404(Teacher, slug=teacher_slug)
+        year = AcademicYear.objects.get(active=True).year
+
+        qs = super().get_queryset()
+        qs = qs.filter(teacher=teacher, time__year=year)
+
+        current_url = resolve(self.request.path_info).url_name
+        if current_url == 'merit_list':
+            qs = qs.filter(action__discipline_type=Discipline.MERIT)
+        else:
+            qs = qs.filter(action__discipline_type=Discipline.DEMERIT)
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        teacher_slug = self.kwargs['slug']
+        teacher = get_object_or_404(Teacher, slug=teacher_slug)
+        current_url = resolve(self.request.path_info).url_name
+        if current_url == 'merit_list':
+            discipline_type = 'Merit'
+        else:
+            discipline_type = 'Demerit'
+
+        context = super().get_context_data(**kwargs)
+        context['teacher'] = teacher
+        context['discipline_type'] = discipline_type
+        return context
