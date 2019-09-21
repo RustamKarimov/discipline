@@ -22,6 +22,7 @@
                         <th>Description</th>
                         <th>Point</th>
                         <th>Time</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
@@ -33,6 +34,29 @@
                             <td>{{ action.action.description }}</td>
                             <td>{{ action.action.point }}</td>
                             <td>{{ action.time }}</td>
+                            <td>
+                                <div class="ui icon grey mini compact buttons">
+                                    {% if discipline_type.lower == 'merit' %}
+                                        <a href="{% url 'teachers:update_merit_action' teacher.slug action.id %}"
+                                           class="ui button">
+                                    {% else %}
+                                        <a href="{% url 'teachers:update_demerit_action' teacher.slug action.id %}"
+                                           class="ui button">
+                                    {% endif %}
+                                        <i class="edit angle icon divider"></i>
+                                    </a>
+                                    {% if discipline_type.lower == 'merit' %}
+                                        <a href="{% url 'teachers:delete_merit_action' teacher.slug action.id %}"
+                                           class="ui button">
+                                    {% else %}
+                                        <a href="{% url 'teachers:delete_demerit_action' teacher.slug action.id %}"
+                                           class="ui button">
+                                    {% endif %}
+
+                                        <i class="trash icon divider"></i>
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     {% empty %}
                         <tr>

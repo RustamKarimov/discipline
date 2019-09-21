@@ -1,0 +1,62 @@
+{% extends 'teachers/base_teachers.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a class="section">{{ teacher }}</a>
+    <i class="right angle icon divider"></i>
+    <a class="section">Edit {{ disciplineaction.action }}</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <div class="ui segment">
+                <h3 class="ui dividing header">Edit {{ disciplineaction.action }}</h3>
+                <form method="post" class="ui form" >
+                    {% csrf_token %}
+                    <div class="ui two column grid">
+                        <div class="eleven wide column">
+                            {{ form.action }}
+                        </div>
+                        <div class="five wide column">
+                            <div class="ui calendar">
+                                <div class="ui input left icon">
+                                    <i class="calendar icon"></i>
+                                    {{ form.time }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="submit" class="ui grey button" value="Submit">
+                    <a href="{% url cancel_url teacher_slug %}" class="ui button">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('.ui.calendar').calendar({
+            type: 'datetime',
+            ampm: false,
+            formatter: {
+                date: function (date, settings) {
+                    if (!date) return '';
+                    var day = date.getDate();
+                    var month = date.getMonth() + 1;
+                    var year = date.getFullYear();
+                    var hours = date.getHours();
+                    var minutes = date.getMinutes();
+                    var seconds = date.getSeconds();
+                    return year + '-' + month + '-' + day;
+                }
+            }
+
+          });
+    </script>
+{% endblock %}

@@ -23,6 +23,16 @@ urlpatterns = [
     path('<slug:slug>/merit/list/', views.DisciplineActionList.as_view(), name='merit_list'),
     path('<slug:slug>/demerit/list/', views.DisciplineActionList.as_view(), name='demerit_list'),
 
+    path('<slug:teacher_slug>/merit/<int:pk>/update/',
+         views.DisciplineActionUpdate.as_view(), name='update_merit_action'),
+    path('<slug:teacher_slug>/demerit/<int:pk>/update',
+         views.DisciplineActionUpdate.as_view(), name='update_demerit_action'),
+
+    path('<slug:teacher_slug>/merit/<int:pk>/delete/',
+         views.DisciplineActionDelete.as_view(), name='delete_merit_action'),
+    path('<slug:teacher_slug>/demerit/<int:pk>/delete/',
+         views.DisciplineActionDelete.as_view(), name='delete_demerit_action'),
+
     path('ajax/load-learners/', ajax_views.load_learners, name='ajax_load_learners'),
     path('ajax/load-discipline-actions/',
          ajax_views.load_discipline_actions_for_grade,

@@ -29,6 +29,7 @@ class DisciplineActionForm(forms.ModelForm):
         discipline_type = kwargs.pop('discipline_type')
 
         super().__init__(*args, **kwargs)
+        # self.fields['time'].widget.attrs['class'] = 'ui calendar'
 
         self.fields['action'].queryset = Discipline.merits.all() if discipline_type.lower() == 'merit' \
             else Discipline.demerits.all()
@@ -47,8 +48,15 @@ class DisciplineGradeForm(forms.ModelForm):
         discipline_type = kwargs.pop('discipline_type')
         super().__init__(*args, **kwargs)
         self.fields['time'].initial = datetime.datetime.now()
-        self.fields['time'].widget.attrs['class'] = 'ui calendar'
+        # self.fields['time'].widget.attrs['class'] = 'ui calendar'
         self.fields['action'].widget.attrs['class'] = 'ui fluid dropdown'
 
         self.fields['action'].queryset = Discipline.merits.all() if discipline_type.lower() == 'merit' \
             else Discipline.demerits.all()
+
+
+class DisciplineActionUpdateForm(forms.ModelForm):
+    class Meta:
+        model = DisciplineAction
+        fields = ('action', 'time')
+

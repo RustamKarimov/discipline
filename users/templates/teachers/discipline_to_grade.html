@@ -35,6 +35,24 @@
 
 {% block scripts %}
     <script>
+        $('.ui.calendar').calendar({
+            type: 'datetime',
+            ampm: false,
+            formatter: {
+                date: function (date, settings) {
+                    if (!date) return '';
+                    var day = date.getDate();
+                    var month = date.getMonth() + 1;
+                    var year = date.getFullYear();
+                    var hours = date.getHours();
+                    var minutes = date.getMinutes();
+                    var seconds = date.getSeconds();
+                    return year + '-' + month + '-' + day;
+                }
+            }
+
+          });
+
         $("#id_grades").on('change', (function () {
             var url = $("#learnerForm").attr("data-learners-url");  // get the url of the `load_learners` view
             var gradeId = $("#id_grades").val();  // get the selected grade ID from the HTML input
@@ -53,6 +71,5 @@
             });
 
         }));
-
     </script>
 {% endblock %}

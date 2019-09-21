@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.shortcuts import redirect, get_object_or_404, render
+from django.shortcuts import redirect, get_object_or_404, render, reverse
 from django.views import generic
 from django.contrib import messages
 from django.urls import resolve
@@ -9,8 +9,8 @@ from django.contrib.auth.decorators import login_required
 from rolepermissions.mixins import HasPermissionsMixin
 from rolepermissions.decorators import has_permission_decorator
 
-from discipline.forms import DisciplineActionForm
-from discipline.forms import DisciplineAction, Discipline, DisciplineGradeForm
+from discipline.forms import DisciplineActionForm, DisciplineActionUpdateForm
+from discipline.models import DisciplineAction, Discipline
 
 from academic_year.models import AcademicYear
 
@@ -175,9 +175,9 @@ class DisciplineActionList(generic.ListView):
 
     def get(self, request, *args, **kwargs):
         teacher_slug = self.kwargs['slug']
-        teacher = get_object_or_404(Teacher, slug=teacher_slug)
+        self.teacher = get_object_or_404(Teacher, slug=teacher_slug)
 
-        if teacher != request.user.teacher:
+        if self.teacher != request.user.teacher:
             messages.warning(request, "You don't have permission to perform this action. "
                              "Please login as another user.")
             return redirect('login')
@@ -185,12 +185,10 @@ class DisciplineActionList(generic.ListView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        teacher_slug = self.kwargs['slug']
-        teacher = get_object_or_404(Teacher, slug=teacher_slug)
         year = AcademicYear.objects.get(active=True).year
 
         qs = super().get_queryset()
-        qs = qs.filter(teacher=teacher, time__year=year)
+        qs = qs.filter(teacher=self.teacher, time__year=year)
 
         current_url = resolve(self.request.path_info).url_name
         if current_url == 'merit_list':
@@ -201,8 +199,6 @@ class DisciplineActionList(generic.ListView):
         return qs
 
     def get_context_data(self, **kwargs):
-        teacher_slug = self.kwargs['slug']
-        teacher = get_object_or_404(Teacher, slug=teacher_slug)
         current_url = resolve(self.request.path_info).url_name
         if current_url == 'merit_list':
             discipline_type = 'Merit'
@@ -210,6 +206,82 @@ class DisciplineActionList(generic.ListView):
             discipline_type = 'Demerit'
 
         context = super().get_context_data(**kwargs)
+        context['teacher'] = self.teacher
+        context['discipline_type'] = discipline_type
+        return context
+
+
+class DisciplineActionUpdate(generic.UpdateView):
+    model = DisciplineAction
+    form_class = DisciplineActionForm
+    template_name = 'teachers/discipline_update_form.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        current_url = resolve(self.request.path_info).url_name
+        if current_url == 'update_merit_action':
+            kwargs['discipline_type'] = 'merit'
+        else:
+            kwargs['discipline_type'] = 'demerit'
+        return kwargs
+
+    def get_success_url(self):
+        teacher_slug = self.kwargs['teacher_slug']
+
+        current_url = resolve(self.request.path_info).url_name
+        if current_url == 'update_merit_action':
+            success_url = 'teachers:merit_list'
+        else:
+            success_url = 'teachers:demerit_list'
+
+        return reverse(success_url,  args=[teacher_slug])
+
+    def get_context_data(self, **kwargs):
+        teacher_slug = self.kwargs['teacher_slug']
+        teacher = get_object_or_404(Teacher, slug=teacher_slug)
+        context = super().get_context_data()
+        current_url = resolve(self.request.path_info).url_name
+        if current_url == 'update_merit_action':
+            cancel_url = 'teachers:merit_list'
+            discipline_type = 'Merit'
+        else:
+            cancel_url = 'teachers:demerit_list'
+            discipline_type = 'Demerit'
+
+        context['cancel_url'] = cancel_url
+        context['teacher_slug'] = teacher_slug
+        context['discipline_type'] = discipline_type
         context['teacher'] = teacher
+        return context
+
+
+class DisciplineActionDelete(generic.DeleteView):
+    model = DisciplineAction
+    template_name = 'discipline/discipline_action_delete.html'
+
+    def get_success_url(self):
+        teacher_slug = self.kwargs['teacher_slug']
+
+        current_url = resolve(self.request.path_info).url_name
+        if current_url == 'delete_merit_action':
+            success_url = 'teachers:merit_list'
+        else:
+            success_url = 'teachers:demerit_list'
+
+        return reverse(success_url,  args=[teacher_slug])
+
+    def get_context_data(self, **kwargs):
+        teacher_slug = self.kwargs['teacher_slug']
+        context = super().get_context_data()
+        current_url = resolve(self.request.path_info).url_name
+        if current_url == 'delete_merit_action':
+            cancel_url = 'teachers:merit_list'
+            discipline_type = 'Merit'
+        else:
+            cancel_url = 'teachers:demerit_list'
+            discipline_type = 'Demerit'
+
+        context['cancel_url'] = cancel_url
+        context['teacher_slug'] = teacher_slug
         context['discipline_type'] = discipline_type
         return context
