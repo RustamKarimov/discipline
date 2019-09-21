@@ -1,0 +1,58 @@
+{% extends 'teachers/base_teachers.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a href="{{ teacher.get_absolute_url }}" class="section">{{ teacher }}</a>
+    <i class="right angle icon divider"></i>
+    <a class="section">Give {{ discipline_type }} to Grade</a>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="column">
+            <div class="ui segment">
+                <form method="post" class="ui form" id="learnerForm"
+                      data-learners-url="{% url 'teachers:load_discipline_actions' %}"
+                      novalidate>
+                    <h4 class="ui header">Select Grade</h4>
+                    {{ filter_form.grades }}
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <form method="post" action="{% url 'teachers:load_discipline_actions' %}"
+                  class="ui form" id="gradeLearnerDisciplineForm">
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $("#id_grades").on('change', (function () {
+            var url = $("#learnerForm").attr("data-learners-url");  // get the url of the `load_learners` view
+            var gradeId = $("#id_grades").val();  // get the selected grade ID from the HTML input
+            var teacher_slug = "{{ teacher.slug }}";
+            var discipline_type = "{{ discipline_type }}"
+            $.ajax({                       // initialize an AJAX request
+                url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-learners/)
+                data: {
+                    'grade_id': gradeId,       // add the grade id to the GET parameters
+                    'teacher_slug': teacher_slug,
+                    'discipline_type': discipline_type
+                },
+            success: function (data) {   // `data` is the return of the `load_learners` view function
+                $("#gradeLearnerDisciplineForm").html(data);  // replace the contents of the learner input with the data that came from the server
+                }
+            });
+
+        }));
+
+    </script>
+{% endblock %}

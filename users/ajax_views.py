@@ -1,22 +1,31 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.forms import modelformset_factory, BaseModelFormSet
 from django.contrib import messages
 
+from academic_year.models import AcademicYear
+
 from grades.models import Grade
-from users.models import Learner
+
+from discipline.models import Discipline, DisciplineAction
+from discipline.forms import DisciplineGradeForm
+
+from users.models import Learner, Teacher
+
 from .forms import AssignGradesToLearnersForm
 
 
-def get_learners(request):
-    grade_id = request.GET.get('grade')
+def get_learners(request, grade=None):
+    if not grade:
+        grade_id = request.GET.get('grade_id')
+        grade = Grade.objects.get(id=grade_id)
+
     try:
         name = request.GET.get('name')
     except:
         name = None
 
-    if grade_id:
-        grade = Grade.objects.get(id=grade_id)
+    if grade:
         learners = Learner.objects.filter(grades=grade, user__current_user=True)
     elif not name:
         learners = Learner.objects.filter(user__current_user=True, grades=None)
@@ -52,7 +61,6 @@ def grade_formset_for_learners(request):
                     learner = form.cleaned_data['id']
 
                     grade = form.cleaned_data['grades']
-                    print(grade, learner)
 
                     if grade:
                         ex_grade = learner.get_active_grade()
@@ -79,3 +87,62 @@ def load_learners(request):
     grade = Grade.objects.get(id=grade_id)
     learners = Learner.objects.filter(grades=grade)
     return render(request, 'teachers/learner_dropdown_options.html', {'learners': learners})
+
+
+class DisciplineBaseModelFormset(BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.queryset = Discipline.objects.none()
+
+
+def load_discipline_actions_for_grade(request):
+    if request.POST:
+        grade_slug = request.POST['grade_slug']
+        grade = Grade.objects.get(slug=grade_slug)
+        teacher_slug = request.POST['teacher_slug']
+        teacher = Teacher.objects.get(slug=teacher_slug)
+        discipline_type = request.POST['discipline_type']
+        learners = get_learners(request, grade)
+    else:
+        grade_id = request.GET.get('grade_id')
+        grade = Grade.objects.get(id=int(grade_id))
+        teacher_slug = request.GET.get('teacher_slug')
+        teacher = Teacher.objects.get(slug=teacher_slug)
+        discipline_type = request.GET.get('discipline_type')
+        learners = get_learners(request)
+
+    year = AcademicYear.objects.get(active=True)
+
+    discipline_formset = modelformset_factory(Discipline, form=DisciplineGradeForm,
+                                              formset=DisciplineBaseModelFormset,
+                                              extra=len(learners))
+    formset = discipline_formset(request.POST or None,
+                                 form_kwargs={'discipline_type': discipline_type})
+
+    if formset.is_valid():
+        for index, form in enumerate(formset):
+            if form.is_valid() and form.cleaned_data:
+                action = form.cleaned_data['action']
+                time = form.cleaned_data['time']
+                if action and time.year == year.year:
+                    DisciplineAction.objects.create(
+                        action=action,
+                        learner=learners[index],
+                        teacher=teacher,
+                        time=time
+                    )
+        messages.info(request, f'{discipline_type}s were added to {grade} learners by {teacher} at {time}')
+        if discipline_type.lower() == 'merit':
+            return redirect('teachers:select_merit_grade', teacher.slug)
+        else:
+            return redirect('teachers:select_demerit_grade', teacher.slug)
+
+    context = {
+        'learners_formset': zip(learners, formset),
+        'formset': formset,
+        'grade_slug': grade.slug,
+        'teacher_slug': teacher.slug,
+        'discipline_type': discipline_type
+    }
+
+    return render(request, 'teachers/discipline_to_grade_table.html', context)

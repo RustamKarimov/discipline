@@ -1,4 +1,8 @@
+import datetime
+
 from django import forms
+
+from grades.models import Grade
 
 from .models import Discipline, DisciplineAction
 
@@ -22,13 +26,29 @@ class DisciplineActionForm(forms.ModelForm):
         fields = ('action', 'time')
 
     def __init__(self, *args, **kwargs):
-        try:
-            discipline_type = kwargs.pop('discipline_type')
-        except:
-            discipline_type = None
+        discipline_type = kwargs.pop('discipline_type')
+
         super().__init__(*args, **kwargs)
-        if not discipline_type:
-            self.fields['action'].queryset = Discipline.objects.all()
-        else:
-            self.fields['action'].queryset = Discipline.merits.all() if discipline_type.lower() == 'merit' \
-                else Discipline.demerits.all()
+
+        self.fields['action'].queryset = Discipline.merits.all() if discipline_type.lower() == 'merit' \
+            else Discipline.demerits.all()
+
+
+class DisciplineGradeForm(forms.ModelForm):
+    action = MeritModelChoiceField(queryset=Discipline.objects.none(),
+                                   required=False)
+    time = forms.DateTimeField(required=False)
+
+    class Meta:
+        model = DisciplineAction
+        fields = ('action', 'time')
+
+    def __init__(self, *args, **kwargs):
+        discipline_type = kwargs.pop('discipline_type')
+        super().__init__(*args, **kwargs)
+        self.fields['time'].initial = datetime.datetime.now()
+        self.fields['time'].widget.attrs['class'] = 'ui calendar'
+        self.fields['action'].widget.attrs['class'] = 'ui fluid dropdown'
+
+        self.fields['action'].queryset = Discipline.merits.all() if discipline_type.lower() == 'merit' \
+            else Discipline.demerits.all()

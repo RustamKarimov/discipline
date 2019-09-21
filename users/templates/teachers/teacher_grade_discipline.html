@@ -1,0 +1,76 @@
+{% extends 'teachers/base_teachers.html' %}
+
+{% block breadcrumb %}
+    {{ block.super }}
+    <i class="right angle icon divider"></i>
+    <a href="{{ teacher.get_absolute_url }}" class="section">{{ teacher }}</a>
+    <i class="right angle icon divider"></i>
+    <a href="{{ grade.get_absolute_url }}" class="section">{{ grade }}</a>
+    <i class="right angle icon divider"></i>
+    <a class="section">Add {{ discipline_type }}</a>
+{% endblock %}
+
+{% block content %}
+    <div class="ui container">
+        <h2 class="ui header">Add {{ discipline_type }}</h2>
+
+        <form method="post" class="ui form">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            <div class="ui attached segment">
+            {% for learner, form in learners_formset %}
+                <div class="ui middle aligned three column stackable grid">
+                    <div class="column">
+                        {{ learner }}
+                    </div>
+                    <div class="column">
+                        {{ form.action }}
+                        {{ form.action.errors }}
+                    </div>
+                    <div class="column">
+                        <div class="ui calendar">
+                            <div class="ui input left icon">
+                                <i class="calendar icon"></i>
+                                {{ form.time }}
+                            </div>
+                        </div>
+                        {{ form.time.errors }}
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+
+            <button type="submit" class="ui fluid bottom attached grey button">
+                Submit
+            </button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('.ui.dropdown').dropdown();
+
+        $('.ui.calendar').calendar({
+            type: 'datetime',
+            ampm: false,
+            formatter: {
+                date: function (date, settings) {
+                    if (!date) return '';
+                    var day = date.getDate();
+                    var month = date.getMonth() + 1;
+                    var year = date.getFullYear();
+                    var hours = date.getHours();
+                    var minutes = date.getMinutes();
+                    var seconds = date.getSeconds();
+                    return year + '-' + month + '-' + day;
+                }
+            }
+
+          });
+
+        {#$('.ui.calendar').calendar({#}
+        {#    startMode: 'year'#}
+        {#  });#}
+    </script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% load crispy_forms_tags %}
+{{ formset.management_form }}
+
+<input type="hidden" name="teacher_slug" value="{{ teacher_slug }}" />
+<input type="hidden" name="grade_slug" value="{{ grade_slug }}" />
+<input type="hidden" name="discipline_type" value="{{ discipline_type }}" />
+
+<table class="ui striped compact stackable table">
+    <thead>
+        <tr>
+            <th class="six wide">Learner</th>
+            <th class="four wide">Action</th>
+            <th class="six wide">Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for learner, form in learners_formset %}
+
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            <tr>
+                <td>{{ forloop.counter }}. {{ learner }}</td>
+                <td>
+                    {{ form.action }}
+                    {{ form.action.errors }}
+                </td>
+                <td>
+                    {{ form.time }}
+                    {{ form.time.errors }}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th colspan="3">
+                <a href="" class="ui right floated button">Cancel</a>
+                <input type="submit" class="ui right floated grey button" value="Submit">
+            </th>
+        </tr>
+    </tfoot>
+</table>
+
+{% csrf_token %}
+
+

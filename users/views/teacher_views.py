@@ -10,10 +10,14 @@ from rolepermissions.mixins import HasPermissionsMixin
 from rolepermissions.decorators import has_permission_decorator
 
 from discipline.forms import DisciplineActionForm
-from discipline.forms import DisciplineAction
+from discipline.forms import DisciplineAction, Discipline, DisciplineGradeForm
 
-from ..models import Teacher
-from ..forms import UserForm, GradesToTeacherForm, SelectLearnerForm
+from academic_year.models import AcademicYear
+
+from grades.models import Grade
+
+from ..models import Teacher, Learner
+from ..forms import UserForm, GradesToTeacherForm, SelectLearnerForm, GradeListForm
 from .. import mixins
 from users.tasks import read_teachers_from_file
 
@@ -91,7 +95,7 @@ class DisciplineActionBaseModelFormset(BaseModelFormSet):
 def discipline_action_to_learner(request, slug):
     # Get and check if the user has permission to make the action
     teacher = get_object_or_404(Teacher, slug=slug)
-    if request.user.teacher != teacher:
+    if not request.user.is_teacher or request.user.teacher != teacher:
         messages.error(request, "You don't have permission to perform this action. Please login as another user.")
         return redirect('login')
 
@@ -104,6 +108,7 @@ def discipline_action_to_learner(request, slug):
 
     # Get the learner form
     learner_form = SelectLearnerForm(request.POST or None)
+    year = AcademicYear.objects.get(active=True)
 
     # Get the discipline action formset
     discipline_formset = modelformset_factory(DisciplineAction, form=DisciplineActionForm,
@@ -119,19 +124,20 @@ def discipline_action_to_learner(request, slug):
                 if form.is_valid() and form.cleaned_data:
                     action = form.cleaned_data['action']
                     time = form.cleaned_data['time']
-                    DisciplineAction.objects.create(
-                        teacher=teacher,
-                        learner=learner,
-                        action=action,
-                        time=time,
-                    )
-                    created = True
+                    if action and time.year == year.year:
+                        DisciplineAction.objects.create(
+                            teacher=teacher,
+                            learner=learner,
+                            action=action,
+                            time=time,
+                        )
+                        created = True
 
             if created:
                 messages.info(request, f'{discipline_type}s were added to {learner} by {teacher} at {time}')
 
             learner_form = SelectLearnerForm()
-            formset = discipline_formset()
+            formset = discipline_formset(form_kwargs={'discipline_type': discipline_type})
 
     context = {
         'learner_form': learner_form,
@@ -140,3 +146,23 @@ def discipline_action_to_learner(request, slug):
     }
 
     return render(request, 'teachers/merit_to_learner.html', context)
+
+
+def add_discipline_action_to_grade(request, slug):
+    teacher = get_object_or_404(Teacher, slug=slug)
+
+    current_url = resolve(request.path_info).url_name
+    if current_url == 'select_merit_grade':
+        discipline_type = 'Merit'
+    else:
+        discipline_type = 'Demerit'
+
+    filter_form = GradeListForm()
+
+    context = {
+        'filter_form': filter_form,
+        'teacher': teacher,
+        'discipline_type': discipline_type
+    }
+
+    return render(request, 'teachers/discipline_to_grade.html', context)

@@ -114,3 +114,13 @@ class SelectLearnerForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.fields['grade'].widget.attrs['class'] = 'ui dropdown'
         self.fields['learner'].widget.attrs['class'] = 'ui dropdown'
+
+
+class GradeListForm(forms.Form):
+    grades = forms.ModelChoiceField(
+        queryset=Grade.objects.filter(active=True)
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['grades'].widget.attrs['class'] = 'ui fluid dropdown'
