@@ -18,7 +18,8 @@ from .forms import AssignGradesToLearnersForm
 def get_learners(request, grade=None):
     if not grade:
         grade_id = request.GET.get('grade_id')
-        grade = Grade.objects.get(id=grade_id)
+        if grade_id:
+            grade = Grade.objects.get(id=grade_id)
 
     try:
         name = request.GET.get('name')

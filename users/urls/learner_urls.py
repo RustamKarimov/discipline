@@ -12,6 +12,8 @@ urlpatterns = [
     path('<slug:slug>/', views.LearnerDetails.as_view(), name='details'),
     path('edit/<slug:slug>/', views.LearnerEdit.as_view(), name='edit'),
     path('delete/<slug:slug>/', views.LearnerDelete.as_view(), name='delete'),
+    path('transfer/<slug:slug>/', views.change_learner_status, name='transfer'),
+    path('expel/<slug:slug>/', views.change_learner_status, name='expel'),
 
     path('ajax/load_learners_per_grade/', ajax_views.load_learners_per_grade, name='load_learners_per_grade'),
     path('ajax/assign-grades-to-learners/', ajax_views.grade_formset_for_learners, name='grade_formset_for_learners'),

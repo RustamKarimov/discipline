@@ -37,10 +37,13 @@
 
                         </div>
                         <div class="item" style="word-wrap: break-word">
-                            <div class="header">Grade</div>
-                            <a href="{{ learner.get_active_grade.get_absolute_url }}">
-                                {{ learner.get_active_grade }}
-                            </a>
+                            <div class="header">Status</div>
+                            {{ status }}
+                            {% if status == 'Learner in' %}
+                                <a href="{{ learner.get_active_grade.get_absolute_url }}">
+                                    {{ learner.get_active_grade }}
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -48,12 +51,18 @@
             {% if request.user.is_superuser %}
                 <br>
                 <div class="row">
-                    <div class="ui mini basic three icon compact buttons">
+                    <div class="ui mini basic five icon compact buttons">
                         <a href="{{ learner.get_update_url }}" class="ui button" title="Edit {{ learner }}">
                             <i class="edit icon"></i>
                         </a>
                         <a href="{{ learner.get_delete_url }}" class="ui button" title="Delete {{ learner }}">
                             <i class="trash icon"></i>
+                        </a>
+                        <a href="{% url 'learners:transfer' learner.slug %}" class="ui button" title="Transfer {{ learner }}">
+                            <i class="calendar minus icon"></i>
+                        </a>
+                        <a href="{% url 'learners:expel' learner.slug %}" class="ui button" title="Expel {{ learner }}">
+                            <i class="calendar times icon"></i>
                         </a>
                         <a class="ui button" title="Print Report">
                             <i class="file pdf icon"></i>

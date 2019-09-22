@@ -53,7 +53,7 @@
             $.ajax({                       // initialize an AJAX request
                 url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-learners/)
                 data: {
-                    'grade': gradeId,       // add the grade id to the GET parameters
+                    'grade_id': gradeId,       // add the grade id to the GET parameters
                     'name': name,
                 },
             success: function (data) {   // `data` is the return of the `load_learners` view function

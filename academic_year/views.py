@@ -2,11 +2,13 @@ from django.views import generic
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.utils.text import slugify
 
 from rolepermissions.mixins import HasPermissionsMixin
 from rolepermissions.decorators import has_permission_decorator
 
 from settings.models import Settings
+from grades.models import Grade
 
 from .models import AcademicYear
 from .forms import AcademicYearForm
@@ -25,8 +27,7 @@ class AcademicYearList(HasPermissionsMixin, generic.ListView):
 
 
 @has_permission_decorator('admin')
-def deactivate_previous_year(request):
-    old_year = AcademicYear.objects.filter(active=True).first()
+def deactivate_previous_year(request, old_year):
     if old_year:
         old_year.active = False
         old_year.save()
@@ -66,17 +67,56 @@ def get_checked_settings():
     return settings_dict
 
 
+def apply_settings(request, year):
+    settings = Settings.objects.first()
+
+    if settings.update_grades:
+        for grade in Grade.active_grades.all():
+            section = grade.section
+            branch = grade.branch
+            learners = grade.learners.all()
+
+            if section < settings.last_section:
+                new_grade = Grade.objects.create(
+                    year=year,
+                    section=section + 1,
+                    branch=branch,
+                    active=True
+                )
+
+                division = Settings.objects.first().division
+                slug_str = f"{division} {section} {branch} {year}"
+                new_grade.slug = slugify(slug_str)
+                new_grade.save()
+
+                for learner in learners:
+                    learner.grades.remove(grade)
+                    learner.grades.add(new_grade)
+            else:
+                for learner in learners:
+                    learner.is_alumni = True
+                    learner.leave_year = learner.get_active_grade().year.year
+                    learner.user.current_user = False
+                    learner.user.save()
+                    learner.save()
+
+
 @has_permission_decorator('admin')
 def add_academic_year(request):
+    old_year = AcademicYear.objects.filter(active=True).first()
     form = AcademicYearForm(request.POST or None)
     if form.is_valid():
         with transaction.atomic():
 
-            # get the active year and deactivate it
-            deactivate_previous_year(request)
-
             # create new academic year and activate it
             year = form.save()
+
+            # apply the options in settings
+            apply_settings(request, year)
+
+            # get the active year and deactivate it
+            deactivate_previous_year(request, old_year)
+
             return redirect('years:details', year.slug)
 
     context = {
