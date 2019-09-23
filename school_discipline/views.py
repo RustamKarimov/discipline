@@ -8,6 +8,8 @@ from school_discipline.roles import TeacherRole, LearnerRole
 from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator
 
+from settings.models import Settings
+
 
 class Login(LoginView):
     form_class = AuthenticationForm
@@ -38,6 +40,10 @@ def logout_user(request):
 @login_required
 @has_permission_decorator('admin')
 def dashboard(request):
+
+    if not Settings.objects.first():
+        Settings.objects.create()
+
     context = {
         'active': 'dashboard'
     }

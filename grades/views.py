@@ -18,7 +18,7 @@ from .forms import GradeForm, GradeUpdateForm, TeacherToGradeForm
 
 class GradeList(generic.ListView):
     model = Grade
-    queryset = Grade.active_grades.all()
+    queryset = Grade.active_grades.all().prefetch_related('learners', 'teachers')
     paginate_by = 12
     template_name = 'grades/list.html'
 
@@ -45,7 +45,7 @@ class GradeAdd(HasPermissionsMixin, generic.FormView):
     template_name = 'grades/form.html'
 
     def get(self, request, *args, **kwargs):
-        if not AcademicYear.objects.filter(active=True):
+        if not AcademicYear.objects.filter(active=True).prefetch_related('grades'):
             messages.error(request, 'You need to add an academic year first.')
             return redirect('years:add')
         return super().get(request, *args, **kwargs)
@@ -69,9 +69,6 @@ class GradeAdd(HasPermissionsMixin, generic.FormView):
                     new_grade = sub_form.save(commit=False)
                     new_grade.year = year
 
-                    division = Settings.objects.first().division
-                    slug_str = f"{division} {section} {branch} {year}"
-                    new_grade.slug = slugify(slug_str)
                     new_grade.save()
 
         return super().form_valid(form)
@@ -100,6 +97,8 @@ class GradeDetails(generic.DetailView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['active'] = 'grades'
+        context['learners'] = self.object.learners.select_related('user')
+        context['teachers'] = self.object.teachers.select_related('user')
         return context
 
     def get(self, request, *args, **kwargs):

@@ -3,5 +3,9 @@
 {% block breadcrumb %}
     {{ block.super }}
     <i class="right angle icon divider"></i>
-    <a href="{% url 'learners:list' %}" class="section">Learners</a>
+    {% if user.is_superuser %}
+        <a href="{% url 'learners:list' %}" class="section">Learners</a>
+    {% else %}
+        <a href="" class="section">Learners</a>
+    {% endif %}
 {% endblock %}

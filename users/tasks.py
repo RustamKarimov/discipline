@@ -23,17 +23,14 @@ TEACHERS_FILENAME = 'static/excel/teachers.xlsx'
 def get_user_or_create(model, filename):
     data = pd.read_excel(filename, index_col=False)
     year = AcademicYear.objects.get(active=True)
-    division = Settings.objects.first().division
     data = data.fillna(0)
 
     for index, row in data.iterrows():
         section = row['Section']
         if section:
             branch = row['Branch']
-            slug_str = f"{division} {int(section)} {branch} {year}"
-            slug = slugify(slug_str)
             grade, created = Grade.objects.get_or_create(
-                year=year, section=int(section), branch=branch, active=True, slug=slug
+                year=year, section=int(section), branch=branch, active=True
             )
         else:
             grade = None

@@ -8,6 +8,12 @@ from django.utils.text import slugify
 from users.models import Learner, Teacher
 
 
+class DisciplineManager(models.Manager):
+    def in_a_number_order(self, *args, **kwargs):
+        qs = self.get_queryset().filter(*args, **kwargs)
+        return sorted(qs, key=lambda n: (n.code[0], int(n.code[1:])))
+
+
 class MeritManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(discipline_type=Discipline.MERIT)

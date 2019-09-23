@@ -36,7 +36,6 @@
 
 {% block scripts %}
     <script>
-
         $(function() {
             var url = $("#learnerForm").attr("data-learners-url");  // get the url of the `load_learners` view
             var gradeId = $("#id_grades").val();  // get the selected grade ID from the HTML input
@@ -59,7 +58,7 @@
             $.ajax({                       // initialize an AJAX request
                 url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-learners/)
                 data: {
-                    'grade': gradeId,       // add the grade id to the GET parameters
+                    'grade_id': gradeId,       // add the grade id to the GET parameters
                 },
             success: function (data) {   // `data` is the return of the `load_learners` view function
                 $("#gradeLearnerForm").html(data);  // replace the contents of the learner input with the data that came from the server

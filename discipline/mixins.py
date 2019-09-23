@@ -2,8 +2,8 @@ from django.views import generic
 from django.forms import modelformset_factory, BaseModelFormSet
 from django.urls import reverse_lazy
 from django.db import transaction
-from django.db.models import CharField, IntegerField
-from django.db.models.functions import Cast
+from django.db.models import CharField, IntegerField, Value
+from django.db.models.functions import Cast, Substr
 
 from .models import Discipline
 from .forms import DisciplineForm
@@ -32,8 +32,7 @@ class DisciplineListMixin(generic.ListView):
             queryset = qs.filter(discipline_type=Discipline.MERIT)
         else:
             queryset = qs.filter(discipline_type=Discipline.DEMERIT)
-        queryset = queryset.annotate(text_part=Cast('code', CharField()),
-                                     num_part=Cast('code', IntegerField())).order_by('point', 'num_part')
+        queryset = queryset.annotate(num_part=Cast(Substr('code', 2), IntegerField())).order_by('point', 'num_part')
         return queryset
 
 

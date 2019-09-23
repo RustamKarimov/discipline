@@ -1,5 +1,7 @@
 {% extends 'learners/base_learners.html' %}
 
+{% load permission_tags %}
+
 {% block breadcrumb %}
     {{ block.super }}
     <i class="right angle icon divider"></i>
@@ -40,9 +42,14 @@
                             <div class="header">Status</div>
                             {{ status }}
                             {% if status == 'Learner in' %}
-                                <a href="{{ learner.get_active_grade.get_absolute_url }}">
+                                {% can "view_grade" learner.get_active_grade user=user as can_view_grade %}
+                                {% if can_view_grade %}
+                                    <a href="{{ learner.get_active_grade.get_absolute_url }}">
+                                        {{ learner.get_active_grade }}
+                                    </a>
+                                {% else %}
                                     {{ learner.get_active_grade }}
-                                </a>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>

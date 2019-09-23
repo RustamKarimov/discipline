@@ -29,7 +29,6 @@ class DisciplineActionForm(forms.ModelForm):
         discipline_type = kwargs.pop('discipline_type')
 
         super().__init__(*args, **kwargs)
-        # self.fields['time'].widget.attrs['class'] = 'ui calendar'
 
         self.fields['action'].queryset = Discipline.merits.all() if discipline_type.lower() == 'merit' \
             else Discipline.demerits.all()

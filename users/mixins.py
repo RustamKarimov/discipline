@@ -6,6 +6,8 @@ from django.contrib import messages
 from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_object_permission
 
+from grades.models import Grade
+
 from . import utils
 
 
@@ -25,7 +27,7 @@ class UserList(generic.ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        qs = qs.filter(user__current_user=True)
+        qs = qs.filter(user__current_user=True).select_related('user')
         return qs
 
 
@@ -77,6 +79,9 @@ class UserDetails(generic.DetailView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=None, **kwargs)
         context['active'] = utils.get_model_name_as_plural_string(self.model)
+        if context['active'] == 'teachers':
+            context['form_classes'] = Grade.active_grades.filter(teachers=self.object).prefetch_related(
+                'learners', 'learners__user')
         return context
 
     def get(self, request, *args, **kwargs):
@@ -88,6 +93,10 @@ class UserDetails(generic.DetailView):
             messages.warning(request, "You don't have permission to perform this action. "
                              "Please login as another user.")
             return redirect('login')
+
+    def get_queryset(self):
+        queryset = super().get_queryset().select_related('user')
+        return queryset
 
 
 class UserEdit(generic.UpdateView):

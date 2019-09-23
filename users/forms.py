@@ -70,9 +70,14 @@ class GradesToTeacherForm(forms.ModelForm):
             'form_class': forms.CheckboxSelectMultiple()
         }
 
+    def __init__(self):
+        super().__init__()
+        self.fields['form_class'].queryset = Grade.active_grades.all()
+
 
 class GradeFilterForm(forms.Form):
-    grades = forms.ModelChoiceField(queryset=Grade.active_grades.all(), required=False, label='Select Grade')
+    grades = forms.ModelChoiceField(queryset=Grade.active_grades.all().prefetch_related('learners'),
+                                    required=False, label='Select Grade')
     name = forms.CharField(required=False, label='Search learner')
 
     class Meta:
@@ -107,8 +112,8 @@ class AssignGradesToLearnersForm(forms.ModelForm):
 
 
 class SelectLearnerForm(forms.Form):
-    grade = forms.ModelChoiceField(queryset=Grade.objects.all())
-    learner = forms.ModelChoiceField(queryset=Learner.objects)
+    grade = forms.ModelChoiceField(queryset=Grade.active_grades.all())
+    learner = forms.ModelChoiceField(queryset=Learner.objects.select_related('user'))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -118,7 +123,7 @@ class SelectLearnerForm(forms.Form):
 
 class GradeListForm(forms.Form):
     grades = forms.ModelChoiceField(
-        queryset=Grade.objects.filter(active=True)
+        queryset=Grade.active_grades.all()
     )
 
     def __init__(self, *args, **kwargs):

@@ -188,7 +188,7 @@ class DisciplineActionList(generic.ListView):
         year = AcademicYear.objects.get(active=True).year
 
         qs = super().get_queryset()
-        qs = qs.filter(teacher=self.teacher, time__year=year)
+        qs = qs.filter(teacher=self.teacher, time__year=year).select_related('action')
 
         current_url = resolve(self.request.path_info).url_name
         if current_url == 'merit_list':

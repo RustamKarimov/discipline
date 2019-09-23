@@ -36,7 +36,7 @@ class LearnerDetails(mixins.UserDetails):
 
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        learner = self.get_object()
+        learner = self.object
         if learner.is_transferred:
             status = f'Transferred in {learner.leave_year}'
         elif learner.is_expelled:
