@@ -2,14 +2,16 @@ from django.views import generic
 from django.db import transaction
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.db.models import Count
 
 from rolepermissions.roles import assign_role
 from rolepermissions.checkers import has_object_permission
 
 from grades.models import Grade
+from discipline.models import DisciplineAction, Discipline
 
 from . import utils
-
+from .models import Teacher, Learner
 
 class UserList(generic.ListView):
     model = None
@@ -79,9 +81,44 @@ class UserDetails(generic.DetailView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=None, **kwargs)
         context['active'] = utils.get_model_name_as_plural_string(self.model)
+
+        context['total_merits'] = self.object.discipline_action.filter(
+            action__discipline_type=Discipline.MERIT).count()
+        context['total_demerits'] = self.object.discipline_action.filter(
+            action__discipline_type=Discipline.DEMERIT).count()
+
         if context['active'] == 'teachers':
             context['form_classes'] = Grade.active_grades.filter(teachers=self.object).prefetch_related(
                 'learners', 'learners__user')
+
+            context['last_5_merits'] = DisciplineAction.objects.select_related('action').filter(
+                teacher=self.object, action__discipline_type=Discipline.MERIT)[:5]
+            context['last_5_demerits'] = DisciplineAction.objects.select_related('action').filter(
+                teacher=self.object, action__discipline_type=Discipline.DEMERIT)[:5]
+
+            context['top_5_merits'] = Discipline.merits.filter(discipline_action__teacher=self.object).annotate(
+                merit_count=Count('code')
+            ).order_by('-merit_count')[:5]
+            context['top_5_demerits'] = Discipline.demerits.filter(discipline_action__teacher=self.object).annotate(
+                demerit_count=Count('code')
+            ).order_by('-demerit_count')[:5]
+
+        else:
+            context['grades'] = Grade.active_grades.filter(learners=self.object).prefetch_related(
+                'learners', 'learners__user')
+
+            context['last_5_merits'] = DisciplineAction.objects.select_related('action').filter(
+                learner=self.object, action__discipline_type=Discipline.MERIT)[:5]
+            context['last_5_demerits'] = DisciplineAction.objects.select_related('action').filter(
+                learner=self.object, action__discipline_type=Discipline.DEMERIT)[:5]
+
+            context['top_5_merits'] = Discipline.merits.filter(discipline_action__learner=self.object).annotate(
+                merit_count=Count('code')
+            ).order_by('-merit_count')[:5]
+            context['top_5_demerits'] = Discipline.demerits.filter(discipline_action__learner=self.object).annotate(
+                demerit_count=Count('code')
+            ).order_by('-demerit_count')[:5]
+
         return context
 
     def get(self, request, *args, **kwargs):

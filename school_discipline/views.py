@@ -9,6 +9,10 @@ from rolepermissions.checkers import has_role
 from rolepermissions.decorators import has_permission_decorator
 
 from settings.models import Settings
+from academic_year.models import AcademicYear
+from grades.models import Grade
+from discipline.models import Discipline, DisciplineAction
+from users.models import Teacher, Learner
 
 
 class Login(LoginView):
@@ -44,7 +48,24 @@ def dashboard(request):
     if not Settings.objects.first():
         Settings.objects.create()
 
+    year_count = AcademicYear.objects.count()
+    grade_count = Grade.active_grades.count()
+    teacher_count = Teacher.objects.count()
+    learner_count = Learner.objects.count()
+    merit_count = Discipline.merits.count()
+    demerit_count = Discipline.demerits.count()
+    merit_action_count = DisciplineAction.objects.filter(action__discipline_type=Discipline.MERIT).count()
+    demerit_action_count = DisciplineAction.objects.filter(action__discipline_type=Discipline.DEMERIT).count()
+
     context = {
-        'active': 'dashboard'
+        'active': 'dashboard',
+        'year_count': year_count,
+        'grade_count': grade_count,
+        'teacher_count': teacher_count,
+        'learner_count': learner_count,
+        'merit_count': merit_count,
+        'demerit_count': demerit_count,
+        'merit_action_count': merit_action_count,
+        'demerit_action_count': demerit_action_count,
     }
     return render(request, 'dashboard.html', context)

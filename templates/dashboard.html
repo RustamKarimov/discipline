@@ -6,14 +6,17 @@
 
 {% block content %}
     <div class="ui stackable grid container">
-        <div class="doubling six column row">
-
+        <div class="doubling four column row">
             {% include 'includes/statistics.html' with number=year_count object='Year' %}
             {% include 'includes/statistics.html' with number=grade_count object='Grade' %}
             {% include 'includes/statistics.html' with number=teacher_count object='Teacher' %}
             {% include 'includes/statistics.html' with number=learner_count object='Learner' %}
+        </div>
+        <div class="doubling four column row">
             {% include 'includes/statistics.html' with number=merit_count object='Merit' %}
             {% include 'includes/statistics.html' with number=demerit_count object='Demerit' %}
+            {% include 'includes/statistics.html' with number=merit_action_count object='Merit Action' %}
+            {% include 'includes/statistics.html' with number=demerit_action_count object='Demerit Action' %}
         </div>
 
         <div class="three column stackable center aligned row">

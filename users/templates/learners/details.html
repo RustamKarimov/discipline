@@ -9,37 +9,33 @@
 {% endblock %}
 
 {% block content %}
-    <div class="seven wide column">
-        <div class="ui padded segment">
-            <div class="ui two column grid">
-                <div class="six wide column">
-                    <div class="row">
-                        <div class="ui rounded fluid image">
-                            <img src="{{ learner.user.image.url }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="ten wide column">
-                    <div class="ui list">
-                        <div class="item">
-                            <div class="header">User ID</div>
-                            {{ learner.user.user_id }}
-                        </div>
-                        <div class="item">
-                            <div class="header">Name</div>
-                            {{learner}}
-                        </div>
-                        <div class="item" style="word-wrap: break-word">
-                            <div class="header">Email</div>
-                            {% if learner.user.email %}
-                                {{ learner.user.email|wordwrap:21 }}
-                            {% else %}
-                                -----------------
-                            {% endif %}
+    <div class="six wide column">
+        <div class="ui centered card">
+            <div class="image">
+                <img src="{{ learner.user.image.url }}" alt="">
+            </div>
+            <div class="content">
+                <div class="header">{{ learner }}</div>
 
-                        </div>
-                        <div class="item" style="word-wrap: break-word">
-                            <div class="header">Status</div>
+                <div class="meta">Learner</div>
+            </div>
+            <div class="extra content">
+                <div class="ui list">
+                    <div class="item">
+                        <i class="id card icon"></i>
+                        <div class="content">{{ learner.user.username }}</div>
+                    </div>
+                    <div class="item">
+                        <i class="envelope icon"></i>
+                        {% if learner.user.email %}
+                            <div class="content">{{ learner.user.email }}</div>
+                        {% else %}
+                            <div class="content">----------</div>
+                        {% endif %}
+                    </div>
+                    <div class="item">
+                        <i class="user graduate icon"></i>
+                        <div class="content">
                             {{ status }}
                             {% if status == 'Learner in' %}
                                 {% can "view_grade" learner.get_active_grade user=user as can_view_grade %}
@@ -55,9 +51,8 @@
                     </div>
                 </div>
             </div>
-            {% if request.user.is_superuser %}
-                <br>
-                <div class="row">
+            {% if user.is_superuser %}
+                <div class="extra content">
                     <div class="ui mini basic five icon compact buttons">
                         <a href="{{ learner.get_update_url }}" class="ui button" title="Edit {{ learner }}">
                             <i class="edit icon"></i>
@@ -78,27 +73,117 @@
                 </div>
             {% endif %}
         </div>
-
-            <div class="ui two column grid">
-                {% include 'includes/statistics.html' with number=123 object='Merit' %}
-                {% include 'includes/statistics.html' with number=123 object='Demerit' %}
-            </div>
     </div>
 
-    <div class="nine wide column">
-        <div class="ui segment">
-            <div class="ui top attached tabular centered pointing secondary menu">
-                <div class="center item active" data-tab="one">Merits</div>
-                <div class="center item" data-tab="two">Demerits</div>
+    <div class="ten wide column">
+        <div class="row">
+            <div class="ui two column grid">
+                {% include 'includes/statistics.html' with number=total_merits object='Merit' %}
+                {% include 'includes/statistics.html' with number=total_demerits object='Demerit' %}
             </div>
-            <div class="ui bottom attached tab segment active" data-tab="one">
-                <p>First</p>
-                <p>Tab</p>
-            </div>
-            <div class="ui bottom attached tab segment" data-tab="two">
-                <p>Second</p>
-                <p>Tab</p>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="ui styled fluid accordion">
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    Last 5 Merits
+                </div>
+                <div class="content">
+                    <div class="ui list">
+                        {% for merit in last_5_merits %}
+                            <div class="item">
+                                <i class="thumbs up grey icon"></i>
+                                <div class="content">
+                                    {{ merit.action.description }}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="item">
+                                <i class="thumbs up grey icon"></i>
+                                <div class="content">
+                                    No merits were given by {{ teacher }} yet...
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    Last 5 Demerits
+                </div>
+                <div class="content">
+                    <div class="ui list">
+                        {% for demerit in last_5_demerits %}
+                            <div class="item">
+                                <i class="thumbs down grey icon"></i>
+                                <div class="content">
+                                    {{ demerit.action.description }}
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="item">
+                                <i class="thumbs down grey icon"></i>
+                                <div class="content">
+                                    No demerits were given by {{ teacher }} yet...
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    Top 5 Merits
+                </div>
+                <div class="content">
+                    <div class="ui list">
+                        {% for merit in top_5_merits %}
+                            <div class="item">
+                                <i class="thumbs up grey icon"></i>
+                                <div class="content">
+                                    {{ merit.description }} ({{ merit.merit_count }})
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="item">
+                                <i class="thumbs up grey icon"></i>
+                                <div class="content">
+                                    No merits were given by {{ teacher }} yet...
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    Top 5 Demerits
+                </div>
+                <div class="content">
+                    <div class="ui list">
+                        {% for demerit in top_5_demerits %}
+                            <div class="item">
+                                <i class="thumbs down grey icon"></i>
+                                <div class="content">
+                                    {{ demerit.description }} ({{ demerit.demerit_count }})
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="item">
+                                <i class="thumbs down grey icon"></i>
+                                <div class="content">
+                                    No demerits were given by {{ teacher }} yet...
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 {% endblock %}
