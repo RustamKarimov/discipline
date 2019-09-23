@@ -80,8 +80,6 @@ def grade_formset_for_learners(request):
 
     return render(request, 'learners/sub_grades_to_learners.html', context)
 
-    # todo: this will be called by ajax and validate the grades for learners
-
 
 def load_learners(request):
     grade_id = request.GET.get('grade')

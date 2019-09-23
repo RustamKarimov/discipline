@@ -9,6 +9,7 @@ from rolepermissions.decorators import has_permission_decorator
 
 from settings.models import Settings
 from grades.models import Grade
+from discipline.models import DisciplineAction
 
 from .models import AcademicYear
 from .forms import AcademicYearForm
@@ -166,5 +167,7 @@ class AcademicYearDelete(HasPermissionsMixin, generic.DeleteView):
         context['active'] = 'years'
         return context
 
-    # todo: delete all the actions done during this year
-    # todo: if checked move all the learners to empty grade
+    def post(self, request, *args, **kwargs):
+        year = self.object
+        DisciplineAction.objects.filter(time__year=year.year).delete()
+        return super().post()

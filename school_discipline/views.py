@@ -69,3 +69,11 @@ def dashboard(request):
         'demerit_action_count': demerit_action_count,
     }
     return render(request, 'dashboard.html', context)
+
+# todo: Read from file must be done through select file form
+# todo: Generate reports for specific learner or for all learners
+# todo: Generate reports for specific teacher or for all teachers
+# todo: Generate statistics about teachers
+# todo: Generate statistics about learners
+# todo: Generate graphs
+# todo: Send emails

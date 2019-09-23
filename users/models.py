@@ -109,6 +109,3 @@ class Learner(models.Model):
 
     def get_active_grade(self):
         return self.grades.filter(active=True).first()
-
-
-# todo: add active field to learner and teachers to separate current users and the users of previous years

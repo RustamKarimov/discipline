@@ -15,7 +15,6 @@ def view_learner(role, user, learner):
     if role == LearnerRole and user == learner.user:
         return True
 
-    # # todo: if user is teacher and learner in his grade return true
     grade = learner.grades.filter(active=True).first()
     if role == TeacherRole and grade in user.teacher.form_class.all():
         return True

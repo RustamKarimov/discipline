@@ -70,10 +70,6 @@ class AssignGradesToTeacher(HasPermissionsMixin, generic.UpdateView):
             return redirect('teachers:details', teacher.slug)
 
 
-# todo: Change form_class of a learner
-# todo: Display information on learner detail page
-
-
 @has_permission_decorator('admin')
 def add_teachers_from_file(request):
     messages.info(request, 'The reading from file is in progress. You can proceed with your work. '
