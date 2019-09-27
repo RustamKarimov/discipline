@@ -57,17 +57,37 @@
             {% endif %}
 
         </div>
-    </div>
-
-    <div class="ten wide column">
-        <div class="row">
-            <div class="ui two column grid">
-                {% include 'includes/statistics.html' with number=total_merits object='Merit' %}
-                {% include 'includes/statistics.html' with number=total_demerits object='Demerit' %}
-            </div>
-        </div>
 
         <br>
+
+        <div class="row">
+           <h3 class="ui header">Form Classes</h3>
+            {% for grade in form_classes %}
+                <div class="ui styled fluid accordion">
+                    <div class="grey title">
+                        <i class="dropdown icon"></i>
+                        <a href="{{ grade.get_absolute_url }}">{{ grade }}</a>
+                    </div>
+                    <div class="content">
+                        <div class="ui divided tiny middle aligned list">
+                            {% for learner in grade.learners.all %}
+                                <div class="item">
+                                    <img class="ui avatar image" src="{{ learner.user.image.url }}">
+                                    <div class="content" >
+                                        <a href="{{ learner.get_absolute_url }}">
+                                            <div style="width: 220px; word-wrap: break-word;">  {{ learner }}</div>
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+   </div>
+
+    <div class="ten wide column">
 
         <div class="row">
             <div class="ui styled fluid accordion">
@@ -171,30 +191,58 @@
 
         <br>
 
-        <div class="row">
-           <h3 class="ui header">Form Classes</h3>
-            {% for grade in form_classes %}
-                <div class="ui styled fluid accordion">
-                    <div class="grey title">
-                        <i class="dropdown icon"></i>
-                        <a href="{{ grade.get_absolute_url }}">{{ grade }}</a>
-                    </div>
-                    <div class="content">
-                        <div class="ui divided tiny middle aligned list">
-                            {% for learner in grade.learners.all %}
-                                <div class="item">
-                                    <img class="ui avatar image" src="{{ learner.user.image.url }}">
-                                    <div class="content" >
-                                        <a href="{{ learner.get_absolute_url }}">
-                                            <div style="width: 220px; word-wrap: break-word;">  {{ learner }}</div>
-                                        </a>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+        <div class="ui two column tablet computer only grid">
+            <div class="column">
+                <div class="ui segment">
+                    <canvas id="DisciplineActionChart" width="100" height="100"
+                            data-url="{% url 'teachers:merit_demerit_chart' teacher.slug %}"></canvas>
                 </div>
-            {% endfor %}
+            </div>
+
+            <div class="column">
+                <div class="ui segment">
+                    <canvas id="OneMonthMerit" width="100" height="100"
+                            data-url="{% url 'teachers:merit_per_week_last_month' teacher.slug %}"></canvas>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="ui segment">
+                    <canvas id="OneMonthDemerit" width="100" height="100"
+                            data-url="{% url 'teachers:demerit_per_week_last_month' teacher.slug %}"></canvas>
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var ctx1 = document.getElementById('DisciplineActionChart').getContext('2d');
+        $.ajax({
+            url: $("#DisciplineActionChart").attr("data-url"),
+            dataType: 'json',
+            success: function (data) {
+                var chart = new Chart(ctx1, data)
+            }
+        })
+
+        var ctx2 = document.getElementById('OneMonthMerit').getContext('2d');
+        $.ajax({
+            url: $("#OneMonthMerit").attr("data-url"),
+            dataType: 'json',
+            success: function (data) {
+                var chart = new Chart(ctx2, data)
+            }
+        })
+
+        var ctx3 = document.getElementById('OneMonthDemerit').getContext('2d');
+        $.ajax({
+            url: $("#OneMonthDemerit").attr("data-url"),
+            dataType: 'json',
+            success: function (data) {
+                var chart = new Chart(ctx3, data)
+            }
+        })
+    </script>
 {% endblock %}

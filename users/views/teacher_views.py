@@ -27,6 +27,11 @@ class TeacherList(HasPermissionsMixin, mixins.UserList):
     model = Teacher
     paginate_by = 10
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        qs = qs.filter(user__current_user=True).prefetch_related('form_class')
+        return qs
+
 
 class TeacherAdd(HasPermissionsMixin, mixins.UserAdd):
     required_permission = 'admin'

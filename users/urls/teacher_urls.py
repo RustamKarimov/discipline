@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 
 from users import ajax_views
 
 from users.views import teacher_views as views
+from . import teacher_charts_urls
 
 
 urlpatterns = [
@@ -32,6 +33,8 @@ urlpatterns = [
          views.DisciplineActionDelete.as_view(), name='delete_merit_action'),
     path('<slug:teacher_slug>/demerit/<int:pk>/delete/',
          views.DisciplineActionDelete.as_view(), name='delete_demerit_action'),
+
+    path('<slug:slug>/charts/', include(teacher_charts_urls)),
 
     path('ajax/load-learners/', ajax_views.load_learners, name='ajax_load_learners'),
     path('ajax/load-discipline-actions/',

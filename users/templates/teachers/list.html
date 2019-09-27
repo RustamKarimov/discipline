@@ -31,7 +31,15 @@
                                 <a href="{{ teacher.get_absolute_url }}">{{ teacher.user.get_full_name }}</a>
                             </td>
                             <td>{{ teacher.user.email }}</td>
-                            <td>{{ teacher.get_number_of_form_classes}}</td>
+                            <td>
+                                {% for form_class in teacher.form_class.all %}
+                                    {% if forloop.last %}
+                                        <a href="{{ form_class.get_absolute_url }}">{{ form_class }}</a>
+                                    {% else %}
+                                        <a href="{{ form_class.get_absolute_url }}">{{ form_class }}</a>,
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
                         </tr>
                     {% empty %}
                         <tr>

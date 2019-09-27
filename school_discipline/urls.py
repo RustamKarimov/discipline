@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 from django.contrib.auth import urls as auth_urls
 
 from . import views
+from . import chart_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -19,6 +20,7 @@ urlpatterns = [
     path('settings/', include(('settings.urls', 'settings'), namespace='settings')),
     path('teacher/', include(('users.urls.teacher_urls', 'users'), namespace='teachers')),
     path('learner/', include(('users.urls.learner_urls', 'users'), namespace='learners')),
+    path('charts/', include(chart_urls)),
     path('', views.dashboard, name='dashboard'),
 ]
 

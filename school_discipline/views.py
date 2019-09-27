@@ -48,6 +48,7 @@ def dashboard(request):
     if not Settings.objects.first():
         Settings.objects.create()
 
+    # Statistics
     year_count = AcademicYear.objects.count()
     grade_count = Grade.active_grades.count()
     teacher_count = Teacher.objects.count()
@@ -56,6 +57,12 @@ def dashboard(request):
     demerit_count = Discipline.demerits.count()
     merit_action_count = DisciplineAction.objects.filter(action__discipline_type=Discipline.MERIT).count()
     demerit_action_count = DisciplineAction.objects.filter(action__discipline_type=Discipline.DEMERIT).count()
+
+    # Last Merits and Demerits
+    last_5_merits = DisciplineAction.objects.select_related('action').filter(
+        action__discipline_type=Discipline.MERIT)[:5]
+    last_5_demerits = DisciplineAction.objects.select_related('action').filter(
+        action__discipline_type=Discipline.DEMERIT)[:5]
 
     context = {
         'active': 'dashboard',
@@ -67,6 +74,9 @@ def dashboard(request):
         'demerit_count': demerit_count,
         'merit_action_count': merit_action_count,
         'demerit_action_count': demerit_action_count,
+
+        'last_5_merits': last_5_merits,
+        'last_5_demerits': last_5_demerits,
     }
     return render(request, 'dashboard.html', context)
 

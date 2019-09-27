@@ -6,111 +6,324 @@
 
 {% block content %}
     <div class="ui stackable grid container">
-        <div class="doubling four column row">
+        <div class="doubling six column row">
             {% include 'includes/statistics.html' with number=year_count object='Year' %}
             {% include 'includes/statistics.html' with number=grade_count object='Grade' %}
             {% include 'includes/statistics.html' with number=teacher_count object='Teacher' %}
             {% include 'includes/statistics.html' with number=learner_count object='Learner' %}
-        </div>
-        <div class="doubling four column row">
-            {% include 'includes/statistics.html' with number=merit_count object='Merit' %}
-            {% include 'includes/statistics.html' with number=demerit_count object='Demerit' %}
+
             {% include 'includes/statistics.html' with number=merit_action_count object='Merit Action' %}
             {% include 'includes/statistics.html' with number=demerit_action_count object='Demerit Action' %}
         </div>
 
-        <div class="three column stackable center aligned row">
-                <div class="column">
-                    <div class="ui segment">
-                        <h3>Graphs</h3>
-                    </div>
+        <div class="three column stackable tablet computer only row">
+            <div class="column">
+                <div class="ui segment">
+                    <canvas id="DisciplineActionChart" width="100" height="100"
+                            data-url="{% url 'pie_chart_discipline_action' %}"></canvas>
                 </div>
+            </div>
+
+            <div class="column">
+                <div class="ui segment">
+                    <canvas id="Top5MeritLearners" width="100" height="100"
+                            data-url="{% url 'bar_top_five_merit_learner_chart' %}"></canvas>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="ui segment">
+                    <canvas id="Top5DemeritLearners" width="100" height="100"
+                            data-url="{% url 'bar_top_five_demerit_learner_chart' %}"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="two column stackable row">
                 <div class="column">
                     <div class="ui segment">
                         <h3>Merits</h3>
-                        <h4>Top 5 Grades</h4>
-                        <table class="ui very basic celled small compact table">
-                            <thead>
-                                <tr>
-                                    <th>Grade</th>
-                                    <th>Merits</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <div class="ui styled fluid accordion">
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Last 5 merits
+                            </div>
+                            <div class="content">
+                                <div class="ui list">
+                                    {% for merit in last_5_merits %}
+                                        <div class="item">
+                                            <i class="thumbs up grey icon"></i>
+                                            <div class="content">
+                                                {{ merit.action.description }}
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="item">
+                                            <i class="thumbs up grey icon"></i>
+                                            <div class="content">
+                                                No merits were given yet...
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                            </tbody>
-                        </table>
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Top 5 merits
+                            </div>
+                            <div class="content">
+                                <div class="ui list">
+                                    {% for merit in top_5_merits %}
+                                        <div class="item">
+                                            <i class="thumbs up grey icon"></i>
+                                            <div class="content">
+                                                {{ merit.action.description }}
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="item">
+                                            <i class="thumbs up grey icon"></i>
+                                            <div class="content">
+                                                No merits were given yet...
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                        <h4>Top 5 Teachers</h4>
-                        <table class="ui very basic celled small compact table">
-                            <thead>
-                                <tr>
-                                    <th>Teacher</th>
-                                    <th>Merits</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Top 5 grades
+                            </div>
+                            <div class="content">
+                                <div class="ui list">
+                                    {% for grade in top_5_grades %}
+                                        <div class="item">
+                                            <i class="thumbs up grey icon"></i>
+                                            <div class="content">
+                                                {{ grade }}
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="item">
+                                            <i class="thumbs up grey icon"></i>
+                                            <div class="content">
+                                                No grades got merits yet...
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                            </tbody>
-                        </table>
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Top 5 teachers
+                            </div>
+                            <div class="content">
+                                <div class="ui list">
+                                    {% for teacher in top_5_teachers %}
+                                        <div class="item">
+                                            <i class="thumbs up grey icon"></i>
+                                            <div class="content">
+                                                {{ teacher }}
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="item">
+                                            <i class="thumbs up grey icon"></i>
+                                            <div class="content">
+                                                No merits were given by any of teachers...
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                        <h4>Top 5 Learners</h4>
-                        <table class="ui very basic celled small compact table">
-                            <thead>
-                                <tr>
-                                    <th>Learner</th>
-                                    <th>Merits</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Top 5 learners
+                            </div>
+                            <div class="content">
+                                <div class="ui list">
+                                    {% for learner in top_5_learners %}
+                                        <div class="item">
+                                            <i class="thumbs up grey icon"></i>
+                                            <div class="content">
+                                                {{ learner }}
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="item">
+                                            <i class="thumbs up grey icon"></i>
+                                            <div class="content">
+                                                No merits were given to any of learners yet...
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                            </tbody>
-                        </table>
+                        </div>
                     </div>
                 </div>
                 <div class="column">
                     <div class="ui segment">
                         <h3>Demerits</h3>
-                        <h4>Top 5 Grades</h4>
-                        <table class="ui very basic celled small compact table">
-                            <thead>
-                                <tr>
-                                    <th>Grade</th>
-                                    <th>Merits</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <div class="ui styled fluid accordion">
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Last 5 demerits
+                            </div>
+                            <div class="content">
+                                <div class="ui list">
+                                    {% for demerit in last_5_demerits %}
+                                        <div class="item">
+                                            <i class="thumbs down grey icon"></i>
+                                            <div class="content">
+                                                {{ demerit.action.description }}
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="item">
+                                            <i class="thumbs down grey icon"></i>
+                                            <div class="content">
+                                                No demerits were given yet...
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                            </tbody>
-                        </table>
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Bottom 5 demerits
+                            </div>
+                            <div class="content">
+                                <div class="ui list">
+                                    {% for demerit in bottom_5_demerits %}
+                                        <div class="item">
+                                            <i class="thumbs down grey icon"></i>
+                                            <div class="content">
+                                                {{ demerit.action.description }}
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="item">
+                                            <i class="thumbs down grey icon"></i>
+                                            <div class="content">
+                                                No demerits were given yet...
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                        <h4>Top 5 Teachers</h4>
-                        <table class="ui very basic celled small compact table">
-                            <thead>
-                                <tr>
-                                    <th>Teacher</th>
-                                    <th>Merits</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Bottom 5 grades
+                            </div>
+                            <div class="content">
+                                <div class="ui list">
+                                    {% for grade in bottom_5_grades %}
+                                        <div class="item">
+                                            <i class="thumbs down grey icon"></i>
+                                            <div class="content">
+                                                {{ grade }}
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="item">
+                                            <i class="thumbs down grey icon"></i>
+                                            <div class="content">
+                                                No grades got demerits yet...
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                            </tbody>
-                        </table>
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Bottom 5 teachers
+                            </div>
+                            <div class="content">
+                                <div class="ui list">
+                                    {% for teacher in bottom_5_teachers %}
+                                        <div class="item">
+                                            <i class="thumbs down grey icon"></i>
+                                            <div class="content">
+                                                {{ teacher }}
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="item">
+                                            <i class="thumbs down grey icon"></i>
+                                            <div class="content">
+                                                No demerits were given by any of teachers...
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                        <h4>Top 5 Learners</h4>
-                        <table class="ui very basic celled small compact table">
-                            <thead>
-                                <tr>
-                                    <th>Learner</th>
-                                    <th>Merits</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                                Bottom 5 learners
+                            </div>
+                            <div class="content">
+                                <div class="ui list">
+                                    {% for learner in bottom_5_learners %}
+                                        <div class="item">
+                                            <i class="thumbs down grey icon"></i>
+                                            <div class="content">
+                                                {{ learner }}
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="item">
+                                            <i class="thumbs down grey icon"></i>
+                                            <div class="content">
+                                                No demerits were given to any of learners yet...
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
 
-                            </tbody>
-                        </table>
+                        </div>
                     </div>
                 </div>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        var ctx1 = document.getElementById('DisciplineActionChart').getContext('2d');
+        $.ajax({
+            url: $("#DisciplineActionChart").attr("data-url"),
+            dataType: 'json',
+            success: function (data) {
+                var chart = new Chart(ctx1, data)
+            }
+        })
+
+        var ctx2 = document.getElementById('Top5MeritLearners').getContext('2d');
+        $.ajax({
+            url: $("#Top5MeritLearners").attr("data-url"),
+            dataType: 'json',
+            success: function (data) {
+                var chart = new Chart(ctx2, data)
+            }
+        })
+
+        var ctx3 = document.getElementById('Top5DemeritLearners').getContext('2d');
+        $.ajax({
+            url: $("#Top5DemeritLearners").attr("data-url"),
+            dataType: 'json',
+            success: function (data) {
+                var chart = new Chart(ctx3, data)
+            }
+        })
+    </script>
 {% endblock %}
